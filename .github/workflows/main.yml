@@ -1,0 +1,141 @@
+name: CI
+
+# This is a basic workflow to help you get started with Actions
+# Global Variables
+env:
+  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
+  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
+  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
+  REPOSITORYNAME:                 "demorepository"
+  APPNAME:                        "demo"
+  KUBERNETESSERVICENAME:          "DEMOKubernetesService"
+  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
+  AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
+  CLUSTERIP:                      ""        
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+#  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build "
+  build:
+    # The type of runner that the job will run on
+
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Runs a single command using the runners shell
+      - name: 'az version'
+        run: az version
+
+      # Checkout last version code from Main branch
+      - name: Checkout last version code from Main branch
+        uses: actions/checkout@main
+
+      # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file Application Insights 
+      - name: Deploy Bicep file Application Insights 
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AAI/main.bicep
+          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+          failOnStdErr: false
+
+      # Deploy Bicep file Container registry
+      - name: Deploy Bicep file Container registry
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/ACR/main.bicep
+          parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
+          failOnStdErr: false
+
+      # 'Build and push image to Azure Container Registry' 
+      - name: 'Build and push image to Azure Container Registry'
+        run: |
+          az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
+          docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+          docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+
+      # Deploy Bicep file Kubernetes service
+      - name: Deploy Bicep file Kubernetes service
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AKS/main.bicep
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}"
+          failOnStdErr: false
+
+      # Assign role to Kubernetes service user to access Container Registry image
+      # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
+      # https://docs.microsoft.com/en-us/answers/questions/536758/how-to-allow-aks-cluster-access-to-azure-container.html
+      - name: Assign role to Kubernetes service user to access Container Registry image 
+        run: |
+          sleep 15
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+
+      # Deploy Container registry image to Kubernetes service 
+      - name: Deploy Container registry image to Kubernetes service
+        run: |
+          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm upgrade nginx ingress-nginx/ingress-nginx --install
+          sleep 15
+          cd src/helloworld-service/helloworld-chart
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }}          
+          echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
+
+      # Deploy Bicep file Log Analytics workspace
+      - name: Deploy Bicep file Log Analytics workspace
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/ALA/main.bicep
+          parameters: name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}"  location="westeurope"
+          failOnStdErr: false
+
+      # Deploy Bicep file Azure Load Testing
+      - name: Deploy Bicep file Azure Load Testing
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/ALT/main.bicep
+          parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
+          failOnStdErr: false
+
+      # https://github.com/Azure/load-testing
+      - name: 'Create Azure Load Test'
+        uses: azure/load-testing@v1
+        with:
+          resourceGroup: ${{ secrets.AZURE_RG }}
+          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
+          loadTestConfigFile: ./Bicep/ALT/config.yaml
+          env: |
+            [
+                {
+                "name": "webapp",
+                "value": "${{ env.CLUSTERIP }}"
+                }
+            ]
