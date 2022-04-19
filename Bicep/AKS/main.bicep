@@ -1,5 +1,5 @@
 // optional params
-param name string //= 'DemoPerformanceAKSCluster'
+param name string = 'DemoPerformanceAKSCluster'
 param location string = resourceGroup().location
 
 // mandatory params
