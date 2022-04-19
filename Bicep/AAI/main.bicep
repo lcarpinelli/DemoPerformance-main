@@ -1,5 +1,5 @@
-param name string = 'DemoPerformaceApplicationInsights'
-param location string = 'westeurope'
+param name string //= 'DemoPerformaceApplicationInsights'
+param location string //= 'westeurope'
 
 resource symbolicname 'Microsoft.Insights/components@2018-05-01-preview' = {
   name: name
