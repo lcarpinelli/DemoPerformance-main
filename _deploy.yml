@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: contoso
+  name: contosos
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: contoso
+      app: contosos
   template:
     metadata:
       labels:
-        app: contoso
+        app: contosos
     spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - name: contoso
+      - name: contosos
         image: contosocontainerregistry2.azurecr.io/contosoapp:v1
         ports:
         - containerPort: 80
