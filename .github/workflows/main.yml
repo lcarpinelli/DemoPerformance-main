@@ -2,15 +2,26 @@ name: CI
 
 # This is a basic workflow to help you get started with Actions
 # Global Variables
+#env:
+#  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsightsa"
+#  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
+#  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
+#  REPOSITORYNAME:                 "demorepository"
+#  APPNAME:                        "demo"
+#  KUBERNETESSERVICENAME:          "DEMOKubernetesService"
+#  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
+#  AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
+#  CLUSTERIP:                      ""      
+  
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsightsa"
-  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
-  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
-  REPOSITORYNAME:                 "demorepository"
-  APPNAME:                        "demo"
-  KUBERNETESSERVICENAME:          "DEMOKubernetesService"
-  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
-  AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
+  AZUREAPPLICATIONINSIGHTSNAME:   "TESTDEMOApplicationInsightsa"
+  CONTAINERREGISTRYNAME:          "TESTDEMOContainerRegistry"
+  CONTAINERREGISTRYNAMELOWER:     "TESTdemocontainerregistry"
+  REPOSITORYNAME:                 "TESTdemorepository"
+  APPNAME:                        "TESTdemo"
+  KUBERNETESSERVICENAME:          "TESTDEMOKubernetesService"
+  AZURELOGANALYTICSWORKSPACENAME: "TESTDEMOLogAnalyticsWorkspace"
+  AZURELOADTESTINGNAME:           "TESTDEMOAzureLoadTesting"
   CLUSTERIP:                      ""        
 
 # Controls when the workflow will run
