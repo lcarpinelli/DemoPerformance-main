@@ -19,7 +19,7 @@ env:
   CONTAINERREGISTRYNAMELOWER:     "testdemocontainerregistry"
   REPOSITORYNAME:                 "testdemorepository"
   APPNAME:                        "testdemo"
-  KUBERNETESSERVICENAME:          "TESTDEMOKubernetesService"
+  KUBERNETESSERVICENAME:          "TEST2DEMOKubernetesService"
   AZURELOGANALYTICSWORKSPACENAME: "TESTDEMOLogAnalyticsWorkspace"
   AZURELOADTESTINGNAME:           "TESTDEMOAzureLoadTesting"
   CLUSTERIP:                      ""        
