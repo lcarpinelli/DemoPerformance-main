@@ -3,7 +3,7 @@ name: CI
 # This is a basic workflow to help you get started with Actions
 # Global Variables
 #env:
-#  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsightsa"
+#  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
 #  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
 #  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
 #  REPOSITORYNAME:                 "demorepository"
@@ -19,7 +19,7 @@ env:
   CONTAINERREGISTRYNAMELOWER:     "testdemocontainerregistry"
   REPOSITORYNAME:                 "testdemorepository"
   APPNAME:                        "testdemo"
-  KUBERNETESSERVICENAME:          "TEST2DEMOKubernetesService"
+  KUBERNETESSERVICENAME:          "TESTDEMOKubernetesService"
   AZURELOGANALYTICSWORKSPACENAME: "TESTDEMOLogAnalyticsWorkspace"
   AZURELOADTESTINGNAME:           "TESTDEMOAzureLoadTesting"
   CLUSTERIP:                      ""        
