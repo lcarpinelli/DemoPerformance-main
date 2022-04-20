@@ -16,7 +16,7 @@ name: CI
 env:
   AZUREAPPLICATIONINSIGHTSNAME:   "TESTDEMOApplicationInsightsa"
   CONTAINERREGISTRYNAME:          "TESTDEMOContainerRegistry"
-  CONTAINERREGISTRYNAMELOWER:     "TESTdemocontainerregistry"
+  CONTAINERREGISTRYNAMELOWER:     "testdemocontainerregistry"
   REPOSITORYNAME:                 "testdemorepository"
   APPNAME:                        "testdemo"
   KUBERNETESSERVICENAME:          "TESTDEMOKubernetesService"
