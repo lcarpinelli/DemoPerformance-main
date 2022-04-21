@@ -2,19 +2,9 @@ name: CI
 
 # This is a basic workflow to help you get started with Actions
 # Global Variables
-#env:
-#  AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
-#  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
-#  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
-#  REPOSITORYNAME:                 "demorepository"
-#  APPNAME:                        "demo"
-#  KUBERNETESSERVICENAME:          "DEMOKubernetesService"
-#  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
-#  AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
-#  CLUSTERIP:                      ""      
-  
+
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsightsa"
+  # AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsightsa"
   CONTAINERREGISTRYNAME:          "FINALTESTDEMOContainerRegistry"
   CONTAINERREGISTRYNAMELOWER:     "finaltestdemocontainerregistry"
   REPOSITORYNAME:                 "finaltestdemorepository"
@@ -24,13 +14,17 @@ env:
   AZURELOADTESTINGNAME:           "FINALTESTDEMOAzureLoadTesting"
   CLUSTERIP:                      ""        
 
-# Controls when the workflow will run
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push or pull request events but only for the main branch
+#   push:
+#     branches: [ master ]
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ master ]
-#  pull_request:
-#    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      AZUREAPPLICATIONINSIGHTSNAME:
+        description: 'AZURE APPLICATION INSIGHTS NAME'
+        required: true
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
@@ -66,7 +60,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AAI/main.bicep
-          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+          parameters: name="${{ github.event.inputs.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
           failOnStdErr: false
 
       # Deploy Bicep file Container registry
