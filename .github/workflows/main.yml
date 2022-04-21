@@ -14,14 +14,14 @@ name: CI
 #  CLUSTERIP:                      ""      
   
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "TESTDEMOApplicationInsightsa"
-  CONTAINERREGISTRYNAME:          "TESTDEMOContainerRegistry"
-  CONTAINERREGISTRYNAMELOWER:     "testdemocontainerregistry"
-  REPOSITORYNAME:                 "testdemorepository"
-  APPNAME:                        "testdemo"
-  KUBERNETESSERVICENAME:          "TESTDEMOKubernetesService"
-  AZURELOGANALYTICSWORKSPACENAME: "TESTDEMOLogAnalyticsWorkspace"
-  AZURELOADTESTINGNAME:           "TESTDEMOAzureLoadTesting"
+  AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsightsa"
+  CONTAINERREGISTRYNAME:          "FINALTESTDEMOContainerRegistry"
+  CONTAINERREGISTRYNAMELOWER:     "finaltestdemocontainerregistry"
+  REPOSITORYNAME:                 "finaltestdemorepository"
+  APPNAME:                        "finaltestdemo"
+  KUBERNETESSERVICENAME:          "FINALTESTDEMOKubernetesService"
+  AZURELOGANALYTICSWORKSPACENAME: "FINALTESTDEMOLogAnalyticsWorkspace"
+  AZURELOADTESTINGNAME:           "FINALTESTDEMOAzureLoadTesting"
   CLUSTERIP:                      ""        
 
 # Controls when the workflow will run
