@@ -97,7 +97,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/main.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="applicationGatewayV2" 
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs }}" 
           failOnStdErr: false
 
       # Assign role to Kubernetes service user to access Container Registry image
