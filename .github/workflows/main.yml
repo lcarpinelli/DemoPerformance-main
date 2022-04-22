@@ -4,15 +4,15 @@ name: CI
 # Global Variables
 
 env:
-  # AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsightsa"
+  AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsights"
   CONTAINERREGISTRYNAME:          "FINALTESTDEMOContainerRegistry"
   CONTAINERREGISTRYNAMELOWER:     "finaltestdemocontainerregistry"
-  REPOSITORYNAME:                 "finaltestdemorepository"
+  # REPOSITORYNAME:                 "finaltestdemorepository"
   APPNAME:                        "finaltestdemo"
   KUBERNETESSERVICENAME:          "FINALTESTDEMOKubernetesService"
   AZURELOGANALYTICSWORKSPACENAME: "FINALTESTDEMOLogAnalyticsWorkspace"
   AZURELOADTESTINGNAME:           "FINALTESTDEMOAzureLoadTesting"
-  CLUSTERIP:                      ""        
+  CLUSTERIP:                      ""       
 
 # # Controls when the workflow will run
 # on:
@@ -22,9 +22,13 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      AZUREAPPLICATIONINSIGHTSNAME:
-        description: 'AZURE APPLICATION INSIGHTS NAME'
+      CONTAINERREGISTRYNAME:
+        description: 'CONTAINER REGISTRY NAME'
         required: true
+      REPOSITORYNAME:
+        description: 'REPOSITORY NAME'
+        required: true
+
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
@@ -60,25 +64,25 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AAI/main.bicep
-          parameters: name="${{ github.event.inputs.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
           failOnStdErr: false
 
-      # Deploy Bicep file Container registry
-      - name: Deploy Bicep file Container registry
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ACR/main.bicep
-          parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
-          failOnStdErr: false
+      # # Deploy Bicep file Container registry
+      # - name: Deploy Bicep file Container registry
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     resourceGroupName: ${{ secrets.AZURE_RG }}
+      #     template: ./Bicep/ACR/main.bicep
+      #     parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
+      #     failOnStdErr: false
 
-      # 'Build and push image to Azure Container Registry' 
-      - name: 'Build and push image to Azure Container Registry'
-        run: |
-          az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
-          docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
-          docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+      # # 'Build and push image to Azure Container Registry' 
+      # - name: 'Build and push image to Azure Container Registry'
+      #   run: |
+      #     az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
+      #     docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+      #     docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
 
       # Deploy Bicep file Application Gateway
       - name: Deploy Bicep file Application Gateway
@@ -88,6 +92,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AAG/main.bicep
+          parameters: virtualNetworkName="${{ env.VIRUTALNETWORKNAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGateway }}" 
           failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
@@ -106,7 +111,7 @@ jobs:
       - name: Assign role to Kubernetes service user to access Container Registry image 
         run: |
           sleep 15
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ github.event.inputs.CONTAINERREGISTRYNAME }}"
 
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
@@ -117,7 +122,7 @@ jobs:
           helm upgrade nginx ingress-nginx/ingress-nginx --install
           sleep 15
           cd src/helloworld-service/helloworld-chart
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }}          
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ github.event.inputs.CONTAINERREGISTRYNAME.lowercase }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }}          
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Bicep file Log Analytics workspace
@@ -154,3 +159,4 @@ jobs:
                 "value": "${{ env.CLUSTERIP }}"
                 }
             ]
+
