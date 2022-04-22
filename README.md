@@ -3,23 +3,24 @@
 Follow the instructions to prepare the environment before start the pipeline.
 NOTE: Access your azure subscription with "administrative credentials"
 
-1) Create a resource group that will contain the resources that will be generated 
-
+## 1. Create a resource group that will contain the resources that will be generated 
 Sample: 
+```console
 az group create -l "switzerlandnorth" -n "DEMO"
-
+```
 Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
 
-2) Create a management identity and assign the owner role to the group created in the previous step. Save the statement output in Notepad for use in the next step
-
+## 2. Create a management identity and assign the owner role to the group created in the previous step. Save the statement output in Notepad for use in the next step
 Sample 
+```console
 az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e/resourceGroups/DEMO --sdk-auth
-
+```
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
-3) Copy the full output from the previous step inside the GitHub secret key AZURE_CREDENTIALS. You can find AZURE_CREDENTIALS in GitHub "Setting-->Secret-->Actions"
+## 3. Copy the full output from the previous step inside the GitHub secret key AZURE_CREDENTIALS. You can find AZURE_CREDENTIALS in GitHub "Setting-->Secret-->Actions"
 
 Sample
+```json
 {
   "clientId": "651ca1e0-XXXX-XXXX-XXXX-aa7c11e10a57",
   "clientSecret": "QOFEWIJFQewfEWFewqFewFewfEWf34_h.pj",
@@ -32,9 +33,10 @@ Sample
   "galleryEndpointUrl": "https://gallery.azure.com/",
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
+```
 
-4) Customize resources names file with: .github\workflows\main.yml
-
+## 4. Customize resources names file with: .github\workflows\main.yml
+```
 Customize value for following keys: 
   AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
   CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
@@ -44,9 +46,9 @@ Customize value for following keys:
   KUBERNETESSERVICENAME:          "DEMOKubernetesService"
   AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
   AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
+```
 
-============================================================
-Other references
+# Other references
 
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal#set-up-chaos-mesh-on-your-aks-cluster
 
