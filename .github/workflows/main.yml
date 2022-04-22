@@ -109,7 +109,8 @@ jobs:
       - name: Kubectl Install
         uses: azure/setup-kubectl@v2.0
         with:
-          version: 'default'
+            version: default
+        id: install
 
       # Assign IP to Target Backend Pool
       - name: Assign IP to Target Backend Pool
