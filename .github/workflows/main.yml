@@ -115,6 +115,7 @@ jobs:
           az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
           $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
           az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
+        shell: pwsh
 
       # Assign role to Kubernetes service user to access Container Registry image
       # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
