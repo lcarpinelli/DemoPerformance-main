@@ -48,6 +48,11 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
         ]
       }
     }
+    addonProfiles: {
+        ingressApplicationGateway: {
+          enabled: true
+        }
+    }
     // servicePrincipalProfile: {
     //   clientId: servicePrincipalClientId
     //   secret: servicePrincipalClientSecret
