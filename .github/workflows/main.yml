@@ -80,6 +80,16 @@ jobs:
           docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
           docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
 
+      # Deploy Bicep file Application Gateway
+      - name: Deploy Bicep file Application Gateway
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AAG/main.bicep
+          parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
+          failOnStdErr: false
+
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
         uses: azure/arm-deploy@v1
@@ -87,7 +97,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/main.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}"
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="1" 
           failOnStdErr: false
 
       # Assign role to Kubernetes service user to access Container Registry image

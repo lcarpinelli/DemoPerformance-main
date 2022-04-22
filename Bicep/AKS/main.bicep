@@ -1,5 +1,6 @@
 // optional params
 param name string //= 'DemoPerformanceAKSCluster'
+param applicationGateway string //= 'DemoPerformanceAKSCluster'
 param location string = resourceGroup().location
 
 // mandatory params
@@ -51,6 +52,9 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
     addonProfiles: {
         ingressApplicationGateway: {
           enabled: true
+          config: {
+            applicationGatewayId: applicationGateway
+          }
         }
     }
     // servicePrincipalProfile: {
