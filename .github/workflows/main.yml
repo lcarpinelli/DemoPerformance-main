@@ -105,13 +105,10 @@ jobs:
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
           failOnStdErr: false
 
-      # Kubectl Install
-      - name: Kubectl Install
-        uses: azure/setup-kubectl@v2.0
-        with:
-            version: default
-        id: install
-
+      # Kubectl tool installer
+      - name: Kubectl tool installer
+        uses: Azure/setup-kubectl@v2.1
+        
       # Assign IP to Target Backend Pool
       - name: Assign IP to Target Backend Pool
         run: |
