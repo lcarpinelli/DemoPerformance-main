@@ -92,7 +92,6 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AAG/mainAAG.bicep
-          parameters: virtualNetworkName="${{ env.VIRUTALNETWORKNAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
           failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
@@ -110,7 +109,6 @@ jobs:
       - name: Assign IP to Target Backend Pool
         run: |
           az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}"  --name defaultaddresspool --resource-group "${{ secrets.AZURE_RG }}" --servers "${{ steps.Kubernetes.outputs.controlPlaneFQDN }}" 
-
 
       # Assign role to Kubernetes service user to access Container Registry image
       # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
