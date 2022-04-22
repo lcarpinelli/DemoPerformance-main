@@ -102,7 +102,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGateway }}" 
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
           failOnStdErr: false
 
       # Assign IP to Target Backend Pool
