@@ -174,3 +174,4 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2020-06-01' =
 // output applicationGateway string = resourceId('Microsoft.Network/applicationGateways', applicationGateway.name)
 output applicationGatewayId string = applicationGateway.id
 output applicationGatewayName string = applicationGateway.name
+output backendPoolName string = applicationGateway.properties.backendAddressPools[0].name
