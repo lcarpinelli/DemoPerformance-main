@@ -48,11 +48,6 @@ param location string = resourceGroup().location
 var appGwPublicIpName = '${applicationGatewayName}-pip'
 var appGwSize = 'Standard_v2'
 
-resource networksecuritygroup 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
-  name: 'finaltestnetworksecuritygroup'
-  location: location
-}
-
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
   name: virtualNetworkName
   location: location
@@ -67,27 +62,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
         name: subnetName
         properties: {
           addressPrefix: subnetPrefix
-          networkSecurityGroup: {
-            id: networksecuritygroup.id
-            properties: {
-              securityRules: [
-                {
-                  properties: {
-                    direction: 'Inbound'
-                    protocol: '*'
-                    access: 'Allow'
-                  }
-                }
-                {
-                  properties: {
-                    direction: 'Outbound'
-                    protocol: '*'
-                    access: 'Allow'
-                  }
-                }
-              ]
-            }
-          }
         }
       }
     ]
