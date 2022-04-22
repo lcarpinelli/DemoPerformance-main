@@ -50,6 +50,7 @@ var appGwSize = 'Standard_v2'
 
 resource networksecuritygroup 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
   name: 'finaltestnetworksecuritygroup'
+  location: location
 }
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
