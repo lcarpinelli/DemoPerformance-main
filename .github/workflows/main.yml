@@ -63,7 +63,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAI/main.bicep
+          template: ./Bicep/AAI/mainAAI.bicep
           parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
           failOnStdErr: false
 
@@ -73,7 +73,7 @@ jobs:
       #   with:
       #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
       #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/ACR/main.bicep
+      #     template: ./Bicep/ACR/mainACR.bicep
       #     parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
       #     failOnStdErr: false
 
@@ -91,19 +91,26 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAG/main.bicep
-          parameters: virtualNetworkName="${{ env.VIRUTALNETWORKNAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGateway }}" 
+          template: ./Bicep/AAG/mainAAG.bicep
+          parameters: virtualNetworkName="${{ env.VIRUTALNETWORKNAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
           failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
+        id: Kubernetes
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AKS/main.bicep
+          template: ./Bicep/AKS/mainAKS.bicep
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGateway }}" 
           failOnStdErr: false
+
+      # Assign IP to Target Backend Pool
+      - name: Assign IP to Target Backend Pool
+        run: |
+          az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}"  --name defaultaddresspool --resource-group "${{ secrets.AZURE_RG }}" --servers "${{ steps.Kubernetes.outputs.controlPlaneFQDN }}" 
+
 
       # Assign role to Kubernetes service user to access Container Registry image
       # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
@@ -131,7 +138,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ALA/main.bicep
+          template: ./Bicep/ALA/mainALA.bicep
           parameters: name="${{ env.AZURELOGANALYTICSWORKSPACENAME }}"  location="westeurope"
           failOnStdErr: false
 
@@ -141,7 +148,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ALT/main.bicep
+          template: ./Bicep/ALT/mainALT.bicep
           parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
           failOnStdErr: false
 
