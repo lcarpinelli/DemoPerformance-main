@@ -4,14 +4,14 @@ name: CI
 # Global Variables
 
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "FINALTESTDEMOApplicationInsights"
-  CONTAINERREGISTRYNAME:          "FINALTESTDEMOContainerRegistry"
-  CONTAINERREGISTRYNAMELOWER:     "finaltestdemocontainerregistry"
+  AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
+  CONTAINERREGISTRYNAME:          "msftdemoperformanceacr"
+  CONTAINERREGISTRYNAMELOWER:     "msftdemoperformanceacr"
   # REPOSITORYNAME:                 "finaltestdemorepository"
   APPNAME:                        "finaltestdemo"
-  KUBERNETESSERVICENAME:          "FINALTESTDEMOKubernetesService"
-  AZURELOGANALYTICSWORKSPACENAME: "FINALTESTDEMOLogAnalyticsWorkspace"
-  AZURELOADTESTINGNAME:           "FINALTESTDEMOAzureLoadTesting"
+  KUBERNETESSERVICENAME:          "demo-performance-aks"
+  AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
+  AZURELOADTESTINGNAME:           "demo-performance-alt"
   CLUSTERIP:                      ""       
 
 # # Controls when the workflow will run
