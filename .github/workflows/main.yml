@@ -84,15 +84,15 @@ jobs:
       #     docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
       #     docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
 
-      # # Deploy Bicep file Application Gateway
-      # - name: Deploy Bicep file Application Gateway
-      #   id: Gateway
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-      #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/AAG/mainAAG.bicep
-      #     failOnStdErr: false
+       Deploy Bicep file Application Gateway
+       name: Deploy Bicep file Application Gateway
+       id: Gateway
+       uses: azure/arm-deploy@v1
+       with:
+         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+         resourceGroupName: ${{ secrets.AZURE_RG }}
+         template: ./Bicep/AAG/mainAAG.bicep
+         failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
