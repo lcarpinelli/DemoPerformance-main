@@ -1,18 +1,19 @@
 # Namespace
-# apiVersion: v1
-# kind: Namespace
-# metadata:
-#   name: {{ .Values.Namespace }}
-#   labels:
-#     env: {{ .Values.Env }}
-#     ver: {{ .Chart.AppVersion }}
-#     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.Namespace }}
+  labels:
+    env: {{ .Values.Env }}
+    ver: {{ .Chart.AppVersion }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 ---
 # # Application Gateway Ingress Controller
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hello-world-ingress
+  namespace: {{ .Values.Namespace }}
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -35,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: user-svc
-  #namespace: {{ .Values.Namespace }}
+  namespace: {{ .Values.Namespace }}
   labels:
     env: {{ .Values.Env }}
     ver: {{ .Chart.AppVersion }}
@@ -51,7 +52,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-app-deploy
-  #namespace: {{ .Values.Namespace }}
+  namespace: {{ .Values.Namespace }}
   labels:
     env: {{ .Values.Env }}
     ver: {{ .Chart.AppVersion }}
