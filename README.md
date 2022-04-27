@@ -35,7 +35,11 @@ Sample
 }
 ```
 
-## 4. Customize resources names file with: .github\workflows\main.yml
+## 4. Create a GitHub secret named AZURE_RG containing Resource Group name, and create another secret named AZURE_SUBSCRIPTION containing the Azure Subscription ID
+
+![65816d401085137df69bd7fcccb3cb69.png](65816d401085137df69bd7fcccb3cb69.png)
+
+## 5. Customize resources names file with: .github\workflows\main.yml
 ```
 Customize value for following keys: 
   AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
