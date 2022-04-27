@@ -5,8 +5,8 @@ name: CI
 
 env:
   AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
-  CONTAINERREGISTRYNAME:          "msftdemoperformanceacr"
-  CONTAINERREGISTRYNAMELOWER:     "msftdemoperformanceacr"
+  # CONTAINERREGISTRYNAME:          "msftdemoperformanceacr"
+  # CONTAINERREGISTRYNAMELOWER:     "msftdemoperformanceacr"
   # REPOSITORYNAME:                 "finaltestdemorepository"
   APPNAME:                        "finaltestdemo"
   KUBERNETESSERVICENAME:          "demo-performance-aks"
@@ -108,6 +108,14 @@ jobs:
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
+        
+      # Deploy Nginx Reverse Proxy service to Kubernetes
+      - name: Deploy Nginx Reverse Proxy service to Kubernetes
+        run: |
+          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm upgrade nginx ingress-nginx/ingress-nginx --install
 
       # Assign IP to Target Backend Pool
       - name: Assign IP to Target Backend Pool
@@ -128,11 +136,6 @@ jobs:
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
         run: |
-          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
-          helm upgrade nginx ingress-nginx/ingress-nginx --install
-          sleep 15
           cd src/helloworld-service/helloworld-chart
           helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ github.event.inputs.CONTAINERREGISTRYNAME.lowercase }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }}          
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
