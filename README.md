@@ -55,13 +55,18 @@ Customize value for following keys:
 ```
 - To be able to register the services you need to go to the Azure portal
 - Select the "Subscription" and in the left menu select "Resource Providers".
+```
 ![image](https://user-images.githubusercontent.com/60384226/165717039-5deec0af-0d8f-42b4-a023-9e6a48232ffd.png)
+```
 - Search "Microsoft.Chaos" and make the Status: Registered.
+```
 ![image](https://user-images.githubusercontent.com/60384226/165717493-982fdbb9-d3ff-4496-be17-2c6d1052d850.png)
+```
 - Search "Microsoft.LoadTestService" and make the Status: Registered.
+```
 ![image](https://user-images.githubusercontent.com/60384226/165717225-4396d967-fb16-4c23-b474-d89b5d071f16.png)
 
-```
+
 
 # Other references
 
