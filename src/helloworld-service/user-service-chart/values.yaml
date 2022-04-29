@@ -36,5 +36,8 @@ Namespace: "demo-performance"
 
 App:
   # ImageName: "msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp:latest"
-  ImageName: "FINALTESTDEMOContainerRegistry.azurecr.io/finaltestdemorepository:v1"
   Replicas: 3
+
+image:
+  repository: msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp
+  tag: latest 

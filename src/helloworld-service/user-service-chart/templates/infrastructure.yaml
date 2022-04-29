@@ -1,19 +1,13 @@
-# Namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.Namespace }}
-  labels:
-    env: {{ .Values.Env }}
-    ver: {{ .Chart.AppVersion }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
----
-# Namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: "prometheus"
----
+# # Namespace
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: {{ .Values.Namespace }}
+#   labels:
+#     env: {{ .Values.Env }}
+#     ver: {{ .Chart.AppVersion }}
+#     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+# ---
 # Application Gateway Ingress Controller
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -116,7 +110,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: user-app
-        image: {{ .Values.App.ImageName }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 80
         resources:
