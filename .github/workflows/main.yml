@@ -138,7 +138,7 @@ jobs:
         run: |
           cd src/helloworld-service/user-service-chart
           $repository = ${{ github.event.inputs.CONTAINERREGISTRYNAME }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} 
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository= $repository --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=$repository --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
