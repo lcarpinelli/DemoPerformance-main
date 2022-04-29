@@ -57,18 +57,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      #asd
-      - name: prova
-        uses: greguintow/concat-string-action@v1
-        env:
-          CONTAINERREGISTRYNAME: prod
-        with:
-          string: '${{ github.event.inputs.CONTAINERREGISTRYNAME }}'
-
-      - name: asd
-        run: |
-          echo $CONTAINERREGISTRYNAME
-
       # Deploy Bicep file Application Insights 
       - name: Deploy Bicep file Application Insights 
         uses: azure/arm-deploy@v1
