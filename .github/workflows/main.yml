@@ -57,81 +57,81 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # # Deploy Bicep file Application Insights 
-      # - name: Deploy Bicep file Application Insights 
+      # Deploy Bicep file Application Insights 
+      - name: Deploy Bicep file Application Insights 
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AAI/mainAAI.bicep
+          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+          failOnStdErr: false
+
+      # # Deploy Bicep file Container registry
+      # - name: Deploy Bicep file Container registry
       #   uses: azure/arm-deploy@v1
       #   with:
       #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
       #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/AAI/mainAAI.bicep
-      #     parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+      #     template: ./Bicep/ACR/mainACR.bicep
+      #     parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
       #     failOnStdErr: false
 
-      # # # Deploy Bicep file Container registry
-      # # - name: Deploy Bicep file Container registry
-      # #   uses: azure/arm-deploy@v1
-      # #   with:
-      # #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-      # #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      # #     template: ./Bicep/ACR/mainACR.bicep
-      # #     parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
-      # #     failOnStdErr: false
+      # # 'Build and push image to Azure Container Registry' 
+      # - name: 'Build and push image to Azure Container Registry'
+      #   run: |
+      #     az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
+      #     docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+      #     docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
 
-      # # # 'Build and push image to Azure Container Registry' 
-      # # - name: 'Build and push image to Azure Container Registry'
-      # #   run: |
-      # #     az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
-      # #     docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
-      # #     docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
+      # Deploy Bicep file Application Gateway
+      - name: Deploy Bicep file Application Gateway
+        id: Gateway
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AAG/mainAAG.bicep
+          failOnStdErr: false
 
-      # # Deploy Bicep file Application Gateway
-      # - name: Deploy Bicep file Application Gateway
-      #   id: Gateway
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-      #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/AAG/mainAAG.bicep
-      #     failOnStdErr: false
+      # Deploy Bicep file Kubernetes service
+      - name: Deploy Bicep file Kubernetes service
+        id: Kubernetes
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AKS/mainAKS.bicep
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
+          failOnStdErr: false
 
-      # # Deploy Bicep file Kubernetes service
-      # - name: Deploy Bicep file Kubernetes service
-      #   id: Kubernetes
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-      #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/AKS/mainAKS.bicep
-      #     parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
-      #     failOnStdErr: false
-
-      # # Kubectl tool installer
-      # - name: Kubectl tool installer
-      #   uses: Azure/setup-kubectl@v2.1
+      # Kubectl tool installer
+      - name: Kubectl tool installer
+        uses: Azure/setup-kubectl@v2.1
         
-      # # Deploy Nginx Reverse Proxy service to Kubernetes
-      # - name: Deploy Nginx Reverse Proxy service to Kubernetes
-      #   run: |
-      #     az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
-      #     helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      #     helm repo update
-      #     helm upgrade nginx ingress-nginx/ingress-nginx --install
+      # Deploy Nginx Reverse Proxy service to Kubernetes
+      - name: Deploy Nginx Reverse Proxy service to Kubernetes
+        run: |
+          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm upgrade nginx ingress-nginx/ingress-nginx --install
 
-      # # Assign IP to Target Backend Pool
-      # - name: Assign IP to Target Backend Pool
-      #   run: |
-      #     az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
-      #     $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
-      #     az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
-      #   shell: pwsh
+      # Assign IP to Target Backend Pool
+      - name: Assign IP to Target Backend Pool
+        run: |
+          az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
+          $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+          az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
+        shell: pwsh
 
-      # # Assign role to Kubernetes service user to access Container Registry image
-      # # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
-      # # https://docs.microsoft.com/en-us/answers/questions/536758/how-to-allow-aks-cluster-access-to-azure-container.html
-      # - name: Assign role to Kubernetes service user to access Container Registry image 
-      #   run: |
-      #     sleep 15
-      #     az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ github.event.inputs.CONTAINERREGISTRYNAME }}"
+      # Assign role to Kubernetes service user to access Container Registry image
+      # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
+      # https://docs.microsoft.com/en-us/answers/questions/536758/how-to-allow-aks-cluster-access-to-azure-container.html
+      - name: Assign role to Kubernetes service user to access Container Registry image 
+        run: |
+          sleep 15
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ github.event.inputs.CONTAINERREGISTRYNAME }}"
 
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
