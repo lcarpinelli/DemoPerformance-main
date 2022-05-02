@@ -66,7 +66,10 @@ Customize value for following keys:
 ```
 ![image](https://user-images.githubusercontent.com/60384226/165717225-4396d967-fb16-4c23-b474-d89b5d071f16.png)
 
+## 7. Azure Load Test configuration
 
+To run load tests, you need to upload the *.jmx file and the test configuration file to the ALT "./Bicep/ALT" folder.
+Upload the files needed to create the tests before starting the pipeline
 
 # Other references
 
