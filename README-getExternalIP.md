@@ -44,6 +44,5 @@ kubectl get services --namespace default nginx-ingress-nginx-controller --output
 ![Alt text](./Images/services_and_ingresses.png/?raw=true "Select Services and Ingress tab")
 
 ## 4. Serch the service named 'nginx-ingress-nginx-controller'
+Copy or click to External IP
 ![Alt text](./Images/get_external_ip.png?raw=true "Serch the service named 'nginx-ingress-nginx-controller'")
-
-## 5. Copy or click to External IP
