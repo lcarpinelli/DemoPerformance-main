@@ -57,6 +57,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
+      - name: Use the value
+        id: step_two
+        run: |
+          echo "${{ env.CONTAINERREGISTRYNAME }}"
+
       # Deploy Bicep file Application Insights 
       - name: Deploy Bicep file Application Insights 
         uses: azure/arm-deploy@v1
@@ -137,7 +146,7 @@ jobs:
       - name: Deploy Container registry image to Kubernetes service
         run: |
           cd src/helloworld-service/user-service-chart
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ github.event.inputs.CONTAINERREGISTRYNAME }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
