@@ -23,19 +23,19 @@ on:
   workflow_dispatch:
     inputs:
       CONTAINERREGISTRYNAME:
-        description: 'Set a Container Registry Name'
+        description: 'Set Container Registry Name'
         required: true
       REPOSITORYNAME:
-        description: 'Set a Repository Name'
+        description: 'Set Repository Name'
         required: true
       AGENTVMSIZE:
-        description: 'Choice a Agent Virtual Machine Size'
+        description: 'Choice Agent Virtual Machine Size'
         type: choice
         required: true
         options:
-        - D2ads_v5
-        - D4ads_v5
-        - D8ads_v5
+        - Standard_D2_v2
+        - Standard_D3_v2
+        - Standard_D4_v2
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
