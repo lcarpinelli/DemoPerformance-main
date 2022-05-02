@@ -35,7 +35,7 @@ Sample
 }
 ```
 
-## 4. Create a GitHub secret named AZURE_RG containing Resource Group name, and create another secret named AZURE_SUBSCRIPTION containing the Azure Subscription ID
+## 4. Create a GitHub secret named AZURE_RG containing Resource Group name, create another secret named AZURE_SUBSCRIPTION containing the Azure Subscription ID and craete another secrect named AZURE_GRAFANAADMINPASSWORD containing the access password to grafana dashboard
 
 ![65816d401085137df69bd7fcccb3cb69.png](65816d401085137df69bd7fcccb3cb69.png)
 
