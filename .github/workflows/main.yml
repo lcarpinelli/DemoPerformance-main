@@ -162,7 +162,7 @@ jobs:
         run: |
           helm repo add chaos-mesh https://charts.chaos-mesh.org
           helm repo update
-          helm install chaos-mesh chaos-mesh/chaos-mesh --namespace=chaos-testing --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
+          helm install chaos-mesh chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
 
       # Deploy Chaos Studio Experiments
       - name: Deploy Chaos Studio Experiments
@@ -184,7 +184,7 @@ jobs:
           $SUBSCRIPTION_ID = ${{ secrets.AZURE_SUBSCRIPTION }}
           $EXPERIMENT_NAME = "Experiment1"    
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
-          
+
       # Deploy Bicep file Azure Load Testing
       - name: Deploy Bicep file Azure Load Testing
         uses: azure/arm-deploy@v1
