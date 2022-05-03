@@ -7,6 +7,7 @@ env:
   AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
   CONTAINERREGISTRYNAME:          ""
   REPOSITORYNAME:                 ""
+  IMAGETAG:                       ""
   AGENTVMSIZE:                    ""
   APPNAME:                        "finaltestdemo"
   KUBERNETESSERVICENAME:          "demo-performance-aks"
@@ -26,7 +27,10 @@ on:
         description: 'Set Container Registry Name'
         required: true
       REPOSITORYNAME:
-        description: 'Set Repository Name'
+        description: 'Set Image Name'
+        required: true
+      IMAGETAG:
+        description: 'Set Image Tag'
         required: true
       AGENTVMSIZE:
         description: 'Choice Agent Virtual Machine Size'
@@ -70,6 +74,7 @@ jobs:
           echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
           echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
           echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
+          echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
 
       # # Deploy Bicep file Application Insights 
       # - name: Deploy Bicep file Application Insights 
@@ -132,7 +137,7 @@ jobs:
       - name: Deploy Container registry image to Kubernetes service
         run: |
           cd src/helloworld-service/user-service-chart
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
@@ -140,7 +145,7 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values .github/config/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --namespace "prometheus" --create-namespace
+          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values src/helloworld-service/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --namespace "prometheus" --create-namespace
 
       # Deploy Bicep file Log Analytics workspace
       - name: Deploy Bicep file Log Analytics workspace
