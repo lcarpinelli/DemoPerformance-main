@@ -140,7 +140,7 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values .github/config/prometheus.values.demo.yaml --set grafana.adminPassword = ${{ secrets.AZURE_GRAFANAADMINPASSWORD }}  --wait --debug --atomic --timeout 600s --namespace "prometheus" --create-namespace
+          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values .github/config/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --namespace "prometheus" --create-namespace
 
       # Deploy Bicep file Log Analytics workspace
       - name: Deploy Bicep file Log Analytics workspace
