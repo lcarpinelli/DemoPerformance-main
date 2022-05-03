@@ -71,25 +71,25 @@ jobs:
           echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
           echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
 
-      # Deploy Bicep file Application Insights 
-      - name: Deploy Bicep file Application Insights 
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAI/mainAAI.bicep
-          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
-          failOnStdErr: false
+      # # Deploy Bicep file Application Insights 
+      # - name: Deploy Bicep file Application Insights 
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     resourceGroupName: ${{ secrets.AZURE_RG }}
+      #     template: ./Bicep/AAI/mainAAI.bicep
+      #     parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
+      #     failOnStdErr: false
 
-      # Deploy Bicep file Application Gateway
-      - name: Deploy Bicep file Application Gateway
-        id: Gateway
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAG/mainAAG.bicep
-          failOnStdErr: false
+      # # Deploy Bicep file Application Gateway
+      # - name: Deploy Bicep file Application Gateway
+      #   id: Gateway
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     resourceGroupName: ${{ secrets.AZURE_RG }}
+      #     template: ./Bicep/AAG/mainAAG.bicep
+      #     failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
@@ -99,7 +99,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" agentVMSize="${{ env.AGENTVMSIZE}}"
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}"
           failOnStdErr: false
 
       # Kubectl tool installer
@@ -114,13 +114,13 @@ jobs:
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
 
-      # Assign IP to Target Backend Pool
-      - name: Assign IP to Target Backend Pool
-        run: |
-          az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
-          $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
-          az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
-        shell: pwsh
+      # # Assign IP to Target Backend Pool
+      # - name: Assign IP to Target Backend Pool
+      #   run: |
+      #     az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
+      #     $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+      #     az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
+      #   shell: pwsh
 
       # Assign role to Kubernetes service user to access Container Registry image
       - name: Assign role to Kubernetes service user to access Container Registry image 
