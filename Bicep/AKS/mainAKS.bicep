@@ -1,6 +1,6 @@
 // optional params
 param name string //= 'DemoPerformanceAKSCluster'
-param applicationGateway string //= 'DemoPerformanceAKSCluster'
+//param applicationGateway string //= 'DemoPerformanceAKSCluster'
 param location string = resourceGroup().location
 
 // mandatory params
@@ -21,7 +21,7 @@ param osDiskSizeGB int = 0
 @maxValue(50)
 param agentCount int = 3
 
-param agentVMSize string = 'Standard_DS2_v2'
+param agentVMSize string //= 'Standard_DS2_v2'
 // osType was a defaultValue with only one allowedValue, which seems strange?, could be a good TTK test
 
 resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
@@ -49,14 +49,14 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
         ]
       }
     }
-    addonProfiles: {
-        ingressApplicationGateway: {
-          enabled: true
-          config: {
-            applicationGatewayId: applicationGateway
-          }
-        }
-    }
+    // addonProfiles: {
+    //     ingressApplicationGateway: {
+    //       enabled: true
+    //       config: {
+    //         applicationGatewayId: applicationGateway
+    //       }
+    //     }
+    // }
     // servicePrincipalProfile: {
     //   clientId: servicePrincipalClientId
     //   secret: servicePrincipalClientSecret

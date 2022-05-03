@@ -5,9 +5,9 @@ name: CI
 
 env:
   AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
-  # CONTAINERREGISTRYNAME:          "msftdemoperformanceacr"
-  # CONTAINERREGISTRYNAMELOWER:     "msftdemoperformanceacr"
-  # REPOSITORYNAME:                 "finaltestdemorepository"
+  CONTAINERREGISTRYNAME:          ""
+  REPOSITORYNAME:                 ""
+  AGENTVMSIZE:                    ""
   APPNAME:                        "finaltestdemo"
   KUBERNETESSERVICENAME:          "demo-performance-aks"
   AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
@@ -23,12 +23,19 @@ on:
   workflow_dispatch:
     inputs:
       CONTAINERREGISTRYNAME:
-        description: 'CONTAINER REGISTRY NAME'
+        description: 'Set Container Registry Name'
         required: true
       REPOSITORYNAME:
-        description: 'REPOSITORY NAME'
+        description: 'Set Repository Name'
         required: true
-
+      AGENTVMSIZE:
+        description: 'Choice Agent Virtual Machine Size'
+        type: choice
+        required: true
+        options:
+        - Standard_D2_v2
+        - Standard_D3_v2
+        - Standard_D4_v2
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
@@ -38,7 +45,6 @@ jobs:
   # This workflow contains a single job called "build "
   build:
     # The type of runner that the job will run on
-
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -57,42 +63,33 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Deploy Bicep file Application Insights 
-      - name: Deploy Bicep file Application Insights 
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAI/mainAAI.bicep
-          parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
-          failOnStdErr: false
+      # Set env to Input 
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
+          echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
+          echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
 
-      # # Deploy Bicep file Container registry
-      # - name: Deploy Bicep file Container registry
+      # # Deploy Bicep file Application Insights 
+      # - name: Deploy Bicep file Application Insights 
       #   uses: azure/arm-deploy@v1
       #   with:
       #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
       #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/ACR/mainACR.bicep
-      #     parameters: name="${{ env.CONTAINERREGISTRYNAME }}"
+      #     template: ./Bicep/AAI/mainAAI.bicep
+      #     parameters: name="${{ env.AZUREAPPLICATIONINSIGHTSNAME }}" location="westeurope"
       #     failOnStdErr: false
 
-      # # 'Build and push image to Azure Container Registry' 
-      # - name: 'Build and push image to Azure Container Registry'
-      #   run: |
-      #     az acr login --name "${{ env.CONTAINERREGISTRYNAMELOWER }}"
-      #     docker build src/helloworld-service/HelloWorld.API/ -t ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
-      #     docker push ${{ env.CONTAINERREGISTRYNAMELOWER }}.azurecr.io/${{ env.REPOSITORYNAME }}:v1
-
-      # Deploy Bicep file Application Gateway
-      - name: Deploy Bicep file Application Gateway
-        id: Gateway
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AAG/mainAAG.bicep
-          failOnStdErr: false
+      # # Deploy Bicep file Application Gateway
+      # - name: Deploy Bicep file Application Gateway
+      #   id: Gateway
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     resourceGroupName: ${{ secrets.AZURE_RG }}
+      #     template: ./Bicep/AAG/mainAAG.bicep
+      #     failOnStdErr: false
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
@@ -102,7 +99,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" applicationGateway="${{ steps.Gateway.outputs.applicationGatewayId }}" 
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="standard_d2ads_v5"
           failOnStdErr: false
 
       # Kubectl tool installer
@@ -117,27 +114,25 @@ jobs:
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
 
-      # Assign IP to Target Backend Pool
-      - name: Assign IP to Target Backend Pool
-        run: |
-          az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
-          $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
-          az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
-        shell: pwsh
+      # # Assign IP to Target Backend Pool
+      # - name: Assign IP to Target Backend Pool
+      #   run: |
+      #     az aks get-credentials --resource-group "${{ secrets.AZURE_RG }}" --name "${{ steps.Kubernetes.outputs.name }}" 
+      #     $ip = kubectl get services --namespace default nginx-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
+      #     az network application-gateway address-pool update --gateway-name "${{ steps.Gateway.outputs.applicationGatewayName }}" --name "${{ steps.Gateway.outputs.backendPoolName }}" --resource-group "${{ secrets.AZURE_RG }}" --servers $ip
+      #   shell: pwsh
 
       # Assign role to Kubernetes service user to access Container Registry image
-      # https://docs.microsoft.com/it-it/azure/aks/cluster-container-registry-integration?tabs=azure-cli
-      # https://docs.microsoft.com/en-us/answers/questions/536758/how-to-allow-aks-cluster-access-to-azure-container.html
       - name: Assign role to Kubernetes service user to access Container Registry image 
         run: |
           sleep 15
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ github.event.inputs.CONTAINERREGISTRYNAME }}"
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
 
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
         run: |
-          cd src/helloworld-service/helloworld-chart
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ github.event.inputs.CONTAINERREGISTRYNAME.lowercase }}.azurecr.io/${{ github.event.inputs.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }}          
+          cd src/helloworld-service/user-service-chart
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=v1 --set app.name=${{ env.APPNAME }} --namespace "demo-performance" --create-namespace  
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
@@ -145,7 +140,7 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values .github/config/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s
+          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values .github/config/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --namespace "prometheus" --create-namespace
 
       # Deploy Bicep file Log Analytics workspace
       - name: Deploy Bicep file Log Analytics workspace
