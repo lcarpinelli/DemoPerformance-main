@@ -69,3 +69,4 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
 
 output controlPlaneFQDN string = aks.properties.fqdn
 output name string = aks.name
+output id string = aks.id
