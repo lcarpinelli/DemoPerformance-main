@@ -33,9 +33,9 @@ on:
         type: choice
         required: true
         options:
-        - Standard_D2s_v2
-        - Standard_D3s_v2
-        - Standard_D4s_v2
+        - standard_d2s_v5
+        - standard_d4s_v5
+        - standard_d8s_v5
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
