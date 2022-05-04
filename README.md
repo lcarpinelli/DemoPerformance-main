@@ -11,7 +11,7 @@ Access your azure subscription with "administrative credentials"
 
 ### Installation
 
-## 1. Create a resource group that will contain the resources that will be generated 
+# Create a resource group that will contain the resources that will be generated 
 Sample: 
 ```console
 az group create -l "switzerlandnorth" -n "DEMO"
