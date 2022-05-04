@@ -12,10 +12,10 @@ Access your azure subscription with "administrative credentials"
 ### Installation
 
 #### - Create a resource group that will contain the resources that will be generated 
-Sample: 
-```console
-az group create -l "switzerlandnorth" -n "DEMO"
-```
+  Sample: 
+  ```console
+  az group create -l "switzerlandnorth" -n "DEMO"
+  ```
 Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
 
 ## 2. Create a management identity and assign the owner role to the group created in the previous step. Save the statement output in Notepad for use in the next step
