@@ -131,8 +131,8 @@ jobs:
           helm repo update
           helm upgrade --install chaos-mesh chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
 
-      # Create Chaos Mesh Pod Faults Experiments
-      - name: Create Chaos Mesh Pod Faults Experiments
+      # Create Chaos Mesh Pod Faults Experiment
+      - name: Create Chaos Mesh Pod Faults Experiment
         shell: pwsh
         run: |
           cd src/chaos-studio
@@ -146,8 +146,8 @@ jobs:
           $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshPodFaults.json' --query identity.principalId
           az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
   
-      # Create Chaos Mesh Pod Stress Experiments
-      - name: Create Chaos Mesh Stress Faults Experiments
+      # Create Chaos Mesh Pod Stress Experiment
+      - name: Create Chaos Mesh Stress Faults Experiment
         shell: pwsh
         run: |
           cd src/chaos-studio
@@ -161,8 +161,8 @@ jobs:
           $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshStressFaults.json' --query identity.principalId
           az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
 
-      # Create Chaos Mesh Http Faults Experiments
-      - name: Create Chaos Mesh Http Faults Experiments
+      # Create Chaos Mesh Http Faults Experiment
+      - name: Create Chaos Mesh Http Faults Experiment
         shell: pwsh
         run: |
           cd src/chaos-studio

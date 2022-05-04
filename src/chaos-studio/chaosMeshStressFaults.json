@@ -1,19 +1,33 @@
 {
-    "name": "branchOne",
-    "actions": [
-      {
-        "type": "continuous",
-        "name": "urn:csci:microsoft:azureKubernetesServiceChaosMesh:stressChaos/2.1",
-        "parameters": [
-          {
-              "key": "jsonSpec",
-              "value": "{\"mode\":\"one\",\"selector\":{\"labelSelectors\":{\"app\":\"app1\"}},\"stressors\":{\"memory\":{\"workers\":4,\"size\":\"256MB\"}}}"
-          }
+    "location": "westeurope",
+    "identity": {
+      "type": "SystemAssigned"
+    },
+    "properties": {
+      "steps": [
+        {
+          "name": "AKS stress",
+          "branches": [
+            {
+              "name": "AKS stress",
+              "actions": [
+                {
+                  "type": "continuous",
+                  "selectorId": "Selector1",
+                  "parameters": [
+                    {
+                      "key": "jsonSpec",
+                      "value": "{\"mode\":\"one\",\"selector\":{\"labelSelectors\":{\"app\":\"app1\"}},\"stressors\":{\"memory\":{\"workers\":4,\"size\":\"256MB\"}}}"
+                    }
+                  ],
+                  "name": "urn:csci:microsoft:azureKubernetesServiceChaosMesh:stressChaos/2.1"
+                }
+              ]
+            }
+          ]
+        }
       ],
-        "selectorid": "Selector1"
-      }
-    ],
-    "selectors": [
+      "selectors": [
         {
           "id": "Selector1",
           "type": "List",
@@ -25,4 +39,5 @@
           ]
         }
       ]
+    }
   }
