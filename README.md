@@ -7,7 +7,7 @@ This project was created so that with a few simple inputs you will have a workin
 Follow the instructions to prepare the environment before start the pipeline.
 The first thing to do before installation is to fork your repository.
 
-![fork](https://user-images.githubusercontent.com/60384226/166690725-fe971291-ccb9-4f83-90a8-3334c7f93cb0.png)
+![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
 
 ### Prerequisites
 Access your azure subscription with "administrative credentials"
