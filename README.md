@@ -1,9 +1,21 @@
 # DemoPerformance
 
-Follow the instructions to prepare the environment before start the pipeline.
-NOTE: Access your azure subscription with "administrative credentials"
+## About The Project
+This project was created so that with a few simple inputs you will have a working Kubernetes environment right away. It will also be testable thanks to the testing and control resources that are installed with it.
 
-## 1. Create a resource group that will contain the resources that will be generated 
+## Getting Started
+Follow the instructions to prepare the environment before start the pipeline.
+
+The first thing to do before installation is to fork your repository.
+
+![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
+
+### Prerequisites
+Access your azure subscription with "administrative credentials"
+
+## Installation
+
+### 1. Create a resource group that will contain the resources that will be generated 
 Sample: 
 ```console
 az group create -l "switzerlandnorth" -n "DEMO"
@@ -37,39 +49,55 @@ Sample
 
 ## 4. Create a GitHub secret named AZURE_RG containing Resource Group name, create another secret named AZURE_SUBSCRIPTION containing the Azure Subscription ID and create another secret names GRAFANA_ADMIN_PASSWORD containing the password to access Grafana 
 
-![65816d401085137df69bd7fcccb3cb69.png](65816d401085137df69bd7fcccb3cb69.png)
+![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
 ## 5. Customize resources names file with: .github\workflows\main.yml
 ```
-Customize value for following keys: 
+Customize ONLY the value of the following keys: 
   AZUREAPPLICATIONINSIGHTSNAME:   "DEMOApplicationInsights"
-  CONTAINERREGISTRYNAME:          "DEMOContainerRegistry"
-  CONTAINERREGISTRYNAMELOWER:     "democontainerregistry"
-  REPOSITORYNAME:                 "demorepository"
   APPNAME:                        "demo"
   KUBERNETESSERVICENAME:          "DEMOKubernetesService"
-  AZURELOGANALYTICSWORKSPACENAME: "DEMOLogAnalyticsWorkspace"
   AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
 ```
 ## 6. Microsoft.Chaos and Microsoft.LoadTestService must be registered in the Resource Providers section of the subscription
-```
 - To be able to register the services you need to go to the Azure portal
-- Select the "Subscription" and in the left menu select "Resource Providers".
-```
+- Select the "Subscription" and in the left menu select "Resource Providers"
+
 ![image](https://user-images.githubusercontent.com/60384226/165717039-5deec0af-0d8f-42b4-a023-9e6a48232ffd.png)
-```
+
 - Search "Microsoft.Chaos" and make the Status: Registered.
-```
+
 ![image](https://user-images.githubusercontent.com/60384226/165717493-982fdbb9-d3ff-4496-be17-2c6d1052d850.png)
-```
+
 - Search "Microsoft.LoadTestService" and make the Status: Registered.
-```
+
 ![image](https://user-images.githubusercontent.com/60384226/165717225-4396d967-fb16-4c23-b474-d89b5d071f16.png)
 
 ## 7. Azure Load Test configuration
 
 To run load tests, you need to upload the *.jmx file and the test configuration file to the ALT "./Bicep/ALT" folder.
 Upload the files needed to create the tests before starting the pipeline
+
+## 8. Start the Pipeline
+
+If you have followed all the previous steps you can now start the pipeline, which will create the environment in your Azure resource group.
+
+- First go to the actions section.
+
+![Actions](https://user-images.githubusercontent.com/60384226/166692831-25fe6373-d2c6-488d-b532-7f6dc964cef3.png)
+
+- Select CI section.
+
+![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
+
+- Click on "Run Workflow", enter the required inputs and finally click on the green "run workflow" button.
+
+![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
+
+## 9. Retrieve IP for testing
+
+When the pipeline has completed status, you need to retrieve the ip address to test it.
+If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
 
 # Other references
 
