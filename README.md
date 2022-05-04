@@ -1,8 +1,13 @@
-# DemoPerformance
-## About The Project
+## DemoPerformance
 
+## About The Project
+This project was created so that with a few simple inputs you will have a working Kubernetes environment right away. It will also be testable thanks to the testing and control resources that are installed with it.
+
+## Getting Started
 Follow the instructions to prepare the environment before start the pipeline.
-NOTE: Access your azure subscription with "administrative credentials"
+
+### Prerequisites
+Access your azure subscription with "administrative credentials"
 
 ## 1. Create a resource group that will contain the resources that will be generated 
 Sample: 
