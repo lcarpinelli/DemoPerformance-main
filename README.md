@@ -76,9 +76,23 @@ Customize ONLY the value of the following keys:
 To run load tests, you need to upload the *.jmx file and the test configuration file to the ALT "./Bicep/ALT" folder.
 Upload the files needed to create the tests before starting the pipeline
 
-## 8. todo
+## 8. Start the Pipeline
 
-roem
+If you have followed all the previous steps you can now start the pipeline, which will create the environment in your Azure resource group.
+
+- First go to the actions section
+![Actions](https://user-images.githubusercontent.com/60384226/166692831-25fe6373-d2c6-488d-b532-7f6dc964cef3.png)
+
+- Select CI section
+![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
+
+- Click on "Run Workflow" and enter the required inputs and finally click on the green "run workflow" button
+![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
+
+## 9. Retrieve IP for testing
+
+When the pipeline has completed status, you need to retrieve the ip address to test it.
+If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
 
 # Other references
 
