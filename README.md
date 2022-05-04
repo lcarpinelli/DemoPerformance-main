@@ -9,6 +9,8 @@ Follow the instructions to prepare the environment before start the pipeline.
 ### Prerequisites
 Access your azure subscription with "administrative credentials"
 
+### Installation
+
 ## 1. Create a resource group that will contain the resources that will be generated 
 Sample: 
 ```console
