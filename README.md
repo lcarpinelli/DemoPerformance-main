@@ -90,7 +90,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 ![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
 
-- Click on "Run Workflow" and enter the required inputs and finally click on the green "run workflow" button.
+- Click on "Run Workflow", enter the required inputs and finally click on the green "run workflow" button.
 
 ![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
 
