@@ -61,7 +61,8 @@ Customize ONLY the value of the following keys:
 ```
 ## 6. Microsoft.Chaos and Microsoft.LoadTestService must be registered in the Resource Providers section of the subscription
 - To be able to register the services you need to go to the Azure portal
-- Select the "Subscription" and in the left menu select "Resource Providers".
+- Select the "Subscription" and in the left menu select "Resource Providers"
+
 ![image](https://user-images.githubusercontent.com/60384226/165717039-5deec0af-0d8f-42b4-a023-9e6a48232ffd.png)
 
 - Search "Microsoft.Chaos" and make the Status: Registered.
