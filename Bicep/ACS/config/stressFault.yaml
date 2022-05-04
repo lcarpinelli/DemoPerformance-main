@@ -1,0 +1,5 @@
+mode: one
+selector:
+    labelSelectors: {app: app1}
+stressors:
+    memory: {workers: 4, size: 256MB}
