@@ -66,9 +66,11 @@ Customize ONLY the value of the following keys:
 ![image](https://user-images.githubusercontent.com/60384226/165717039-5deec0af-0d8f-42b4-a023-9e6a48232ffd.png)
 
 - Search "Microsoft.Chaos" and make the Status: Registered.
+
 ![image](https://user-images.githubusercontent.com/60384226/165717493-982fdbb9-d3ff-4496-be17-2c6d1052d850.png)
 
 - Search "Microsoft.LoadTestService" and make the Status: Registered.
+
 ![image](https://user-images.githubusercontent.com/60384226/165717225-4396d967-fb16-4c23-b474-d89b5d071f16.png)
 
 ## 7. Azure Load Test configuration
@@ -80,13 +82,16 @@ Upload the files needed to create the tests before starting the pipeline
 
 If you have followed all the previous steps you can now start the pipeline, which will create the environment in your Azure resource group.
 
-- First go to the actions section
+- First go to the actions section.
+
 ![Actions](https://user-images.githubusercontent.com/60384226/166692831-25fe6373-d2c6-488d-b532-7f6dc964cef3.png)
 
-- Select CI section
+- Select CI section.
+
 ![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
 
-- Click on "Run Workflow" and enter the required inputs and finally click on the green "run workflow" button
+- Click on "Run Workflow" and enter the required inputs and finally click on the green "run workflow" button.
+
 ![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
 
 ## 9. Retrieve IP for testing
