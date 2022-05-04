@@ -92,7 +92,7 @@ metadata:
     ver: {{ .Chart.AppVersion }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
-  replicas: {{ .Values.App.Replicas }}
+  replicas: {{ .Values.image.replicas }}
   selector:
     matchLabels:
       app: user-app

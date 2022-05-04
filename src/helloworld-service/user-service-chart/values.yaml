@@ -34,10 +34,11 @@ Env: "Development"
 
 Namespace: "demo-performance"
 
-App:
-  # ImageName: "msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp:latest"
-  Replicas: 3
+# App:
+#   # ImageName: "msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp:latest"
+#   Replicas: 3
 
 image:
   repository: msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp
-  tag: latest 
+  tag: latest
+  replicas: 3
