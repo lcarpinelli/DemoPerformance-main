@@ -1,0 +1,28 @@
+{
+    "name": "branchOne",
+    "actions": [
+      {
+        "type": "continuous",
+        "name": "urn:csci:microsoft:azureKubernetesServiceChaosMesh:stressChaos/2.1",
+        "parameters": [
+          {
+              "key": "jsonSpec",
+              "value": "{\"mode\":\"one\",\"selector\":{\"labelSelectors\":{\"app\":\"app1\"}},\"stressors\":{\"memory\":{\"workers\":4,\"size\":\"256MB\"}}}"
+          }
+      ],
+        "selectorid": "Selector1"
+      }
+    ],
+    "selectors": [
+        {
+          "id": "Selector1",
+          "type": "List",
+          "targets": [
+            {
+              "type": "ChaosTarget",
+              "id": "/subscriptions/6a37c895-4239-4b1e-bc34-a48c4994cc8a/resourceGroups/rg-poc-demo-performance/providers/Microsoft.ContainerService/managedClusters/demo-performance-aks/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh"
+            }
+          ]
+        }
+      ]
+  }

@@ -114,7 +114,7 @@ jobs:
       - name: Deploy Container registry image to Kubernetes service
         run: |
           cd src/helloworld-service/user-service-chart
-          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set app.name=${{ env.APPNAME }} --set image.replicas=${{ env.IMAGEREPLICAS }} --namespace "demo-performance" --create-namespace  
+          helm upgrade ${{ env.APPNAME }} . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set app.name=${{ env.APPNAME }} --set image.replicas=${{}} --namespace "demo-performance" --create-namespace  
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
@@ -131,21 +131,51 @@ jobs:
           helm repo update
           helm upgrade --install chaos-mesh chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
 
-      # Deploy Chaos Studio Experiments
-      - name: Deploy Chaos Studio Experiments
+      # Create Chaos Mesh Pod Faults Experiments
+      - name: Create Chaos Mesh Pod Faults Experiments
         shell: pwsh
         run: |
+          cd src/chaos-studio
           $RESOURCE_ID = "${{ steps.Kubernetes.outputs.id }}"
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "Experiment1"         
+          $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
           az rest --method put --url "https://management.azure.com/$RESOURCE_ID/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh?api-version=2021-09-15-preview" --body '{\"properties\":{}}'
           az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh/capabilities/PodChaos-2.1?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
-          cd src/chaos-studio
-          $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@experiment.json' --query identity.principalId
+          $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshPodFaults.json' --query identity.principalId
           az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
   
+      # Create Chaos Mesh Pod Stress Experiments
+      - name: Create Chaos Mesh Stress Faults Experiments
+        shell: pwsh
+        run: |
+          cd src/chaos-studio
+          $RESOURCE_ID = "${{ steps.Kubernetes.outputs.id }}"
+          $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
+          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
+          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
+          $EXPERIMENT_NAME = "ChaosMeshStressFaultsExperiment"
+          az rest --method put --url "https://management.azure.com/$RESOURCE_ID/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh?api-version=2021-09-15-preview" --body '{\"properties\":{}}'
+          az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh/capabilities/StressChaos-2.1?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
+          $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshStressFaults.json' --query identity.principalId
+          az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
+
+      # Create Chaos Mesh Http Faults Experiments
+      - name: Create Chaos Mesh Http Faults Experiments
+        shell: pwsh
+        run: |
+          cd src/chaos-studio
+          $RESOURCE_ID = "${{ steps.Kubernetes.outputs.id }}"
+          $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
+          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
+          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
+          $EXPERIMENT_NAME = "ChaosMeshHttpFaultsExperiment"
+          az rest --method put --url "https://management.azure.com/$RESOURCE_ID/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh?api-version=2021-09-15-preview" --body '{\"properties\":{}}'
+          az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh/capabilities/HTTPChaos-2.1?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
+          $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshHttpFaults.json' --query identity.principalId
+          az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
+    
       # # Run Chaos Experiments
       # - name: Run Chaos Experiments
       #   shell: pwsh
