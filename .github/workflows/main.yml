@@ -124,12 +124,12 @@ jobs:
       #     helm repo update
       #     helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values src/helloworld-service/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --set grafana.adminPassword="${{ secrets.GRAFANA_ADMIN_PASSWORD }}" --namespace "prometheus" --create-namespace
 
-      # Set up Chaos Mesh on your AKS cluster
-      - name: Set up Chaos Mesh on your AKS cluster
-        run: |
-          helm repo add chaos-mesh https://charts.chaos-mesh.org
-          helm repo update
-          helm upgrade --install chaos-mesh chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
+      # # Set up Chaos Mesh on your AKS cluster
+      # - name: Set up Chaos Mesh on your AKS cluster
+      #   run: |
+      #     helm repo add chaos-mesh https://charts.chaos-mesh.org
+      #     helm repo update
+      #     helm upgrade --install chaos-mesh chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --namespace "chaos-testing" --create-namespace
 
       # # Enable Chaos Studio on your AKS cluster
       # - name: Enable Chaos Studio on your AKS cluster
