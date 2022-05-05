@@ -9,11 +9,13 @@ az login
 Reference: https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli
 
 ## 2. Login to Azure Container Registry
+Change "myregistry" whit your container registry name.
 Sample: 
 ```console
 az acr login --name myregistry
 ```
 ## 3. Pull a public image
+This image is an example image.
 Sample: 
 ```console
 docker pull mcr.microsoft.com/azuredocs/aks-helloworld:v1
