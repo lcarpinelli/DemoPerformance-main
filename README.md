@@ -111,11 +111,12 @@ If you do not know how to retrieve it you need to go to the file: **README-getEx
 ## 10. Test the Service
 
 Now that you have retrieved the IP address, you will see your image at the same address and if you add */grafana* you can see the dashboard part. 
+
+![Grafana](https://user-images.githubusercontent.com/60384226/166918755-9eaaabe9-802e-40cb-b96c-83dd1947ac5b.gif)
+
 To access the service grafana the credentials will be: 
  - username = admin 
  - password = the one you entered in the secrets in step number 4.
-
-![image](https://user-images.githubusercontent.com/60384226/166883547-3d366167-8c30-4901-b1c4-1954fe85e0b1.png)
 
 # Other references
 
