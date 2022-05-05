@@ -3,4 +3,4 @@ mode: all
 duration: '600s'
 selector:
   namespaces:
-    - demo-performance
+    - 'demo-performance'
