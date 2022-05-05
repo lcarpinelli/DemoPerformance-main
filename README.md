@@ -99,6 +99,15 @@ If you have followed all the previous steps you can now start the pipeline, whic
 When the pipeline has completed status, you need to retrieve the ip address to test it.
 If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
 
+## 10. Test the Service
+
+Now that you have retrieved the IP address, you will see your image at the same address and if you add */grafana* you can see the dashboard part. 
+To access the service grafana the credentials will be: 
+ - username = admin 
+ - password = the one you entered in the secrets in step number 4.
+
+![image](https://user-images.githubusercontent.com/60384226/166883547-3d366167-8c30-4901-b1c4-1954fe85e0b1.png)
+
 # Other references
 
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal#set-up-chaos-mesh-on-your-aks-cluster
