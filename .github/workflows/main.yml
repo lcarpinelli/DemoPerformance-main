@@ -176,21 +176,21 @@ jobs:
       #     $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
       #     echo "::set-output name=podFailur::$PsJson"
 
-      # Convert Yaml faiuler to json
-      - name: Convert Pod Yaml to Json
-        id: converter
-        shell: pwsh
-        run: |
-          Install-Module powershell-yaml -Force
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          echo "::set-output name=json::$PsJson"
+      # # Convert Yaml faiuler to json
+      # - name: Convert Pod Yaml to Json
+      #   id: converter
+      #   shell: pwsh
+      #   run: |
+      #     Install-Module powershell-yaml -Force
+      #     $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+      #     echo "::set-output name=json::$PsJson"
 
-      # Print json
-      - name: Print Json
-        shell: pwsh
-        run: |
-          $PRINT = '${{ steps.converter.outputs.json }}'
-          echo $PRINT
+      # # Print json
+      # - name: Print Json
+      #   shell: pwsh
+      #   run: |
+      #     $PRINT = '${{ steps.converter.outputs.json }}'
+      #     echo $PRINT
       
       # Deploy ChaosMeshPodFaultsExperiment
       - name: Deploy Bicep file ChaosMeshPodFaultsExperiment
@@ -200,7 +200,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue='${{ steps.converter.outputs.podFailur }}' actionName="podChaos"
+          parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue='{"action":"pod-failure","mode":"all","duration":"600s","selector":{"namespaces":["default"]}}' actionName="podChaos"
           failOnStdErr: false
       
       # Give experiment permission to your AKS cluster
