@@ -188,7 +188,9 @@ jobs:
       # Print json
       - name: Print Json
         shell: pwsh
-        run: echo ${{ steps.converter.outputs.podFailur }}
+        run: |
+          $PRINT = "${{ steps.converter.outputs.podFailur }}"
+          echo $PRINT
       
       # Deploy ChaosMeshPodFaultsExperiment
       - name: Deploy Bicep file ChaosMeshPodFaultsExperiment
