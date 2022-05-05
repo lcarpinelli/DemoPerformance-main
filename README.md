@@ -90,9 +90,18 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 ![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
 
-- Click on "Run Workflow", enter the required inputs and finally click on the green "run workflow" button.
+- Click on "Run Workflow".
 
 ![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
+
+- Enter the required inputs: 
+  - Set Container Registry Name = Only the name of container registry ( ex. acr-...).
+  - Set Image Name = Only the name of a Image push in container registry, without version.
+  - Set Image Tag = The version of Image ( ex. v1, Latest, ...)
+  - Set App Replicas = Number of instances the app creates.
+  - Choice Agent Virtual Machine Size = Size of the virtual machine that kubernetes will create.
+ 
+- When you have entered all the inputs, click the green button "Run workflow"
 
 ## 9. Retrieve IP for testing
 
