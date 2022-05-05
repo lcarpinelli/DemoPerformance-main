@@ -17,7 +17,7 @@ The first thing to do before installation is to fork your repository.
 
 ### Prerequisites
 - Access your azure subscription with "administrative credentials".
-- A Container Registry with an image.
+- A Container Registry with an image. If you don't have a container registry with an image check the file **README-createImageForTest.md** (in the repository).
 
 ## Installation
 
