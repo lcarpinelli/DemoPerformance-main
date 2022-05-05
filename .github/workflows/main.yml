@@ -182,14 +182,15 @@ jobs:
         shell: pwsh
         run: |
           Install-Module powershell-yaml -Force
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+          $Content = Get-Content -Raw "Bicep/ACS/config/podFailure.yaml"
+          $PsJson = @(ConvertFrom-Yaml -Yaml $Content | ConvertTo-Json -Compress
           echo "::set-output name=podFailur::$PsJson"
 
       # Print json
       - name: Print Json
         shell: pwsh
         run: |
-          $PRINT = "${{ steps.converter.outputs.podFailur }}"
+          $PRINT = '${{ steps.converter.outputs.podFailur }}'
           echo $PRINT
       
       # Deploy ChaosMeshPodFaultsExperiment
