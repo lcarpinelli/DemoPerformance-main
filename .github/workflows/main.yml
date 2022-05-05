@@ -172,11 +172,11 @@ jobs:
         shell: pwsh
         run: |
           Install-Module powershell-yaml -Force
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "files/podFailure.yaml") | ConvertTo-Json -Compress)
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=podFailur::$PsJson"
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "files/strassFault.yaml") | ConvertTo-Json -Compress)
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/strassFault.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=stressFailur::$PsJson"
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "files/httpFault.yaml") | ConvertTo-Json -Compress)
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/httpFault.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=httpFailur::$PsJson"
 
       # Deploy ChaosMeshPodFaultsExperiment
