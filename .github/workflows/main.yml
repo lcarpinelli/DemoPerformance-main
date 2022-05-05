@@ -184,7 +184,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue="${{ steps.converter.outputs.podFailur }}" actionName="podChaos"
+          parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue='${{ steps.converter.outputs.podFailur }}' actionName="podChaos"
           failOnStdErr: false
       
       # Give experiment permission to your AKS cluster
