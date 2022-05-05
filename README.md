@@ -84,7 +84,11 @@ Customize ONLY the value of the following keys:
 To run load tests, you need to upload the *.jmx file and the test configuration file to the ALT "./Bicep/ALT" folder.
 Upload the files needed to create the tests before starting the pipeline
 
-## 8. Start the Pipeline
+## 8. Chaos Experiment configuration
+
+TODO
+
+## 9. Start the Pipeline
 
 If you have followed all the previous steps you can now start the pipeline, which will create the environment in your Azure resource group.
 
@@ -109,12 +113,12 @@ If you have followed all the previous steps you can now start the pipeline, whic
  
 - When you have entered all the inputs, click the green button "Run workflow"
 
-## 9. Retrieve IP for testing
+## 10. Retrieve IP for testing
 
 When the pipeline has completed status, you need to retrieve the ip address to test it.
 If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
 
-## 10. Test the Service
+## 11. Test the Service
 
 Now that you have retrieved the IP address, you will see your image at the same address and if you add */grafana* you can see the dashboard part. 
 
