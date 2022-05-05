@@ -3,15 +3,10 @@ param location string = resourceGroup().location
 param experimentName string
 param aksName string
 
-//param stepName string //AKS Pod kill
-//param branchName string //AKS Pod kill
-//param actionName string //'urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1'
-
-param actionValue string //
-//param duration string
+param actionValue string
+param actionName string //'urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1'
 
 var targetId = '/subscriptions/${ subscription().id }/resourceGroups/${ resourceGroup().id }/providers/Microsoft.ContainerService/managedClusters/${ aksName }/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh'
-//var actionNameComplete = 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:${ actionName }/2.1'
 
 resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
   name: experimentName
@@ -34,10 +29,10 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
     ]
     steps: [
       {
-        name: 'AKS Pod kill'
+        name: 'Step 1'
         branches: [
           {
-            name: 'AKS Pod kill'
+            name: 'Branch 1'
             actions: [
               {
                 type: 'continuous'
@@ -49,7 +44,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
                     value: actionValue //'{"action":"pod-failure","mode":"all","duration":"600s","selector":{"namespaces":["default"]}}'
                   }
                 ]
-                name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1'
+                name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:${actionName}/2.1'
               }
             ]
           }
