@@ -17,13 +17,11 @@ The first thing to do before installation is to fork your repository.
 
 ### Prerequisites
 - Access your azure subscription with "administrative credentials".
-- A Container Registry with an image in the same resource group that you will use.
+- A Container Registry with an image.
 
 ## Installation
 
 ### 1. Create a resource group that will contain the resources that will be generated 
-*Within this resource group you will need to have a Container Registry with an image installed.*
-
 Sample: 
 ```console
 az group create -l "switzerlandnorth" -n "DEMO"
