@@ -16,14 +16,13 @@ The first thing to do before installation is to fork your repository.
 ![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
 
 ### Prerequisites
-Access your azure subscription with "administrative credentials".
-A Container Registry with an image in the same resource group that you will use.
+- Access your azure subscription with "administrative credentials".
+- A Container Registry with an image in the same resource group that you will use.
 
 ## Installation
 
 ### 1. Create a resource group that will contain the resources that will be generated 
-
-*Allert* = Within this resource group you will need to have a Container Registry with an image installed.
+*Within this resource group you will need to have a Container Registry with an image installed.*
 
 Sample: 
 ```console
