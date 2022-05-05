@@ -190,10 +190,12 @@ jobs:
       
       # Give experiment permission to your AKS cluster
       - name: Give experiment permission to your AKS cluster
+        shell: pwsh
         run: |
           $RESOURCE_ID = "${{ steps.Kubernetes.outputs.id }}"
           $EXPERIMENT_PRINCIPAL_ID = "${{ steps.PodExperiment.outputs.servicePrincipalId }}"
           az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
+      
       # # Run Chaos Experiments
       # - name: Run Chaos Experiments
       #   shell: pwsh

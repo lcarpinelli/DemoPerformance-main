@@ -1,7 +1,29 @@
 param location string = resourceGroup().location
 param targetId string //"/subscriptions/6a37c895-4239-4b1e-bc34-a48c4994cc8a/resourceGroups/rg-poc-demo-performance/providers/Microsoft.ContainerService/managedClusters/demo-performance-aks/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh"
 
-param actions array = [
+param steps array = [
+  {
+    name: 'Step 1'
+    branches: [
+      {
+        name: 'Branch 1'
+        actions: [
+          {
+            type: 'continuous'
+            selectorId: 'Selector1'
+            duration: 'PT10M'
+            parameters: [
+              {
+                key: 'jsonSpec'
+                value: '{"action":"pod-failure","mode":"all","duration":"600s","selector":{"namespaces":["default"]}}'
+              }
+            ]
+            name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1'
+          }
+        ]
+      }
+    ]
+  }
   {
     name: 'ChaosMeshPodFaultsExperiment'
     stepName: 'AKS Pod kill'
