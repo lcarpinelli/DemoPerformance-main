@@ -181,6 +181,7 @@ jobs:
         id: converter
         shell: pwsh
         run: |
+          Install-Module powershell-yaml -Force
           $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=podFailur::$PsJson"
 
