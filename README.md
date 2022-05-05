@@ -3,6 +3,11 @@
 ## About The Project
 This project was created so that with a few simple inputs you will have a working Kubernetes environment right away. It will also be testable thanks to the testing and control resources that are installed with it.
 
+The following resources will be installed:
+ - Kubernetes service
+ - Azure Load Testing
+ - Chaos Experiment
+
 ## Getting Started
 Follow the instructions to prepare the environment before start the pipeline.
 
@@ -11,7 +16,8 @@ The first thing to do before installation is to fork your repository.
 ![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
 
 ### Prerequisites
-Access your azure subscription with "administrative credentials"
+- Access your azure subscription with "administrative credentials".
+- A Container Registry with an image. If you don't have a container registry with an image check the file **README-createImageForTest.md** (in the repository).
 
 ## Installation
 
