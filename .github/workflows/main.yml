@@ -179,6 +179,7 @@ jobs:
 
       # Deploy Bicep file Chaos Experiment
       - name: Deploy Bicep file Chaos Experiment
+        id: PodExperiment
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
@@ -186,7 +187,13 @@ jobs:
           template: ./Bicep/ACS/mainACS.bicep
           parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" stepName="AKS PodKill" branchName="AKS PodKill" actionName="podChaos" actionValue="${{ steps.converter.outputs.json }}" duration='PT10M'
           failOnStdErr: false
-
+      
+      # Give experiment permission to your AKS cluster
+      - name: Give experiment permission to your AKS cluster
+        run: |
+          $RESOURCE_ID = "${{ steps.Kubernetes.outputs.id }}"
+          $EXPERIMENT_PRINCIPAL_ID = "${{ steps.PodExperiment.outputs.servicePrincipalId }}"
+          az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
       # # Run Chaos Experiments
       # - name: Run Chaos Experiments
       #   shell: pwsh
