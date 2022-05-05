@@ -167,13 +167,22 @@ jobs:
       #     $EXPERIMENT_PRINCIPAL_ID = az rest --method put --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/?api-version=2021-09-15-preview --body '@chaosMeshPodFaults.json' --query identity.principalId
       #     az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope $RESOURCE_ID
 
+      # # Convert Yaml faiuler to json
+      # - name: Convert Pod Yaml to Json
+      #   id: converter
+      #   shell: pwsh
+      #   run: |
+      #     Install-Module powershell-yaml -Force
+      #     $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+      #     echo "::set-output name=podFailur::$PsJson"
+
       # Convert Yaml faiuler to json
       - name: Convert Pod Yaml to Json
         id: converter
         shell: pwsh
         run: |
           Install-Module powershell-yaml -Force
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+          $PsJson = @(Get-Content -Raw "Bicep/ACS/config/podFailure.json") | ConvertTo-Json -Compress)
           echo "::set-output name=podFailur::$PsJson"
 
       # Print json
