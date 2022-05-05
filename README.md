@@ -107,7 +107,6 @@ To access the service grafana the credentials will be:
  - password = the one you entered in the secrets in step number 4.
 
 ![image](https://user-images.githubusercontent.com/60384226/166883547-3d366167-8c30-4901-b1c4-1954fe85e0b1.png)
-![image](https://user-images.githubusercontent.com/60384226/166883584-b5be6df2-a48f-4bb1-9f7a-0f56a35ef595.png)
 
 # Other references
 
