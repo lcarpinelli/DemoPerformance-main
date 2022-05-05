@@ -1,4 +1,4 @@
-param location string = resourceGroup().id
+param location string = resourceGroup().location
 //param targetId string //"/subscriptions/6a37c895-4239-4b1e-bc34-a48c4994cc8a/resourceGroups/rg-poc-demo-performance/providers/Microsoft.ContainerService/managedClusters/demo-performance-aks/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh"
 param experimentName string
 param aksName string
