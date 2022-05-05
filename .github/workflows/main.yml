@@ -174,10 +174,6 @@ jobs:
           Install-Module powershell-yaml -Force
           $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=podFailur::$PsJson"
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/strassFault.yaml") | ConvertTo-Json -Compress)
-          echo "::set-output name=stressFailur::$PsJson"
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/httpFault.yaml") | ConvertTo-Json -Compress)
-          echo "::set-output name=httpFailur::$PsJson"
 
       # Deploy ChaosMeshPodFaultsExperiment
       - name: Deploy Bicep file ChaosMeshPodFaultsExperiment
@@ -190,27 +186,6 @@ jobs:
           parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue="${{ steps.converter.outputs.podFailur }}" actionName="podChaos"
           failOnStdErr: false
       
-      # Deploy Bicep file ChaosMeshStressFaultsExperiment
-      - name: Deploy ChaosMeshStressFaultsExperiment
-        id: ChaosMeshStressFaultsExperiment
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ACS/mainACS.bicep
-          parameters: experimentName="ChaosMeshStressFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue="${{ steps.converter.outputs.stressFailur }}" actionName="stressChaos"
-          failOnStdErr: false
-
-      # Deploy Bicep file ChaosMeshHttpFaultsExperiment
-      - name: Deploy ChaosMeshHttpFaultsExperiment
-        id: ChaosMeshHttpFaultsExperiment
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ACS/mainACS.bicep
-          parameters: experimentName="ChaosMeshPodFaultsExperiment" aksName="${{ env.KUBERNETESSERVICENAME }}" actionValue="${{ steps.converter.outputs.httpFailur }}" actionName="httpChaos"
-          failOnStdErr: false
       # Give experiment permission to your AKS cluster
       - name: Give experiment permission to your AKS cluster
         shell: pwsh
@@ -237,6 +212,15 @@ jobs:
           template: ./Bicep/ALT/mainALT.bicep
           parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
           failOnStdErr: false
+
+      # Run Chaos Experiments
+      - name: Run Chaos Experiments
+        shell: pwsh
+        run: |
+          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
+          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
+          $EXPERIMENT_NAME = "${{ steps.converter.outputs.experimentName }}"    
+          az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'

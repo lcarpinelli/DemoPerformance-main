@@ -55,3 +55,4 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
 }
 
 output servicePrincipalId string = experiment.identity.principalId
+output experimentName string = experimentName
