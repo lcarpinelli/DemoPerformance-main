@@ -9,4 +9,4 @@ spec:
   duration: '150s'
   selector:
     namespaces:
-      - demo-performance
+      - default
