@@ -91,7 +91,7 @@ jobs:
         id: converter
         shell: pwsh
         run: |
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "files/file.yaml") | ConvertTo-Json -Compress)
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
           echo "::set-output name=json::$PsJson"
 
       - name: Print Json
