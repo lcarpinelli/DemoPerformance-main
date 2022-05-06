@@ -1,7 +1,7 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
-  name: pod-failure-all-userapp
+  name: pod-failure-all-user-app
   namespace: chaos-testing
 spec:
   action: pod-failure
