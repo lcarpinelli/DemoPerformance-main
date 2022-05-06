@@ -82,36 +82,47 @@ jobs:
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
 
-      # Install PowerShell Module
-      - name: Install PowerShell Module
-        shell: pwsh
-        run: Install-Module powershell-yaml -Force
-
-      # Convrt Yaml to Json      
-      - name: Convrt Yaml to Json      
-        id: converter
-        shell: pwsh
+      - id: set_var
         run: |
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          echo $PsJson | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          content=`cat ./Bicep/ACS/config/podFailure.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"
+      # # Install PowerShell Module
+      # - name: Install PowerShell Module
+      #   shell: pwsh
+      #   run: Install-Module powershell-yaml -Force
 
-      # Print Json
-      - name: Print Json
-        shell: pwsh
-        run: |
-          $JsonToPrint = '${{ env.JSONACTIONEXPERIMENT }}'
-          echo $JsonToPrint
+      # # Convrt Yaml to Json      
+      # - name: Convrt Yaml to Json      
+      #   id: converter
+      #   shell: pwsh
+      #   run: |
+      #     $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+      #     echo $PsJson | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      # # Print Json
+      # - name: Print Json
+      #   shell: pwsh
+      #   run: |
+      #     $JsonToPrint = '${{ env.JSONACTIONEXPERIMENT }}'
+      #     echo $JsonToPrint
       
-      # Deploy Bicep file Kubernetes service
-      - name: Deploy Bicep file Kubernetes service
-        id: Kubernetes
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
-          resourceGroupName: 'rg-poc-demo-performance'
-          template: ./Bicep/ACS/mainACS.bicep
-          parameters: actionValue='${{ env.JSONACTIONEXPERIMENT }}'
-          failOnStdErr: false
+      # # Deploy Bicep file Kubernetes service
+      # - name: Deploy Bicep file Kubernetes service
+      #   id: Kubernetes
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
+      #     resourceGroupName: 'rg-poc-demo-performance'
+      #     template: ./Bicep/ACS/mainACS.bicep
+      #     parameters: actionValue='${{ env.JSONACTIONEXPERIMENT }}'
+      #     failOnStdErr: false
 
       # # Deploy Bicep file Kubernetes service
       # - name: Deploy Bicep file Kubernetes service
