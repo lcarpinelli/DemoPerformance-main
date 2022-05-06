@@ -246,8 +246,8 @@ jobs:
       - name: Deploy and Run Choas Mesh Experiment
         run: |
           cd src/chaos-studio/chaos-mesh
-          helm upgrade experiment .\chaos-mesh-chart\ --install
-          
+          helm upgrade experiment --install .\chaos-mesh-chart\
+
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
         uses: azure/load-testing@v1
