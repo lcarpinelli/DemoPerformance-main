@@ -92,16 +92,34 @@ Before running the pipeline, configure the json file located in "./Bicep/ACS/par
 The configurable value is:
   - duration = Duration in seconds of the experiment
 
+## 9. Create new Chaos experiments
+
+### Enable capabilities for target resource
+
 For other experiments you will need to enable the capabilities:
+
 1. Open the Azure portal.
 2. Search for Chaos Studio in the search bar.
 3. Click on Targets and navigate to your AKS cluster.
 4. Click on Manage Actions.
 ![Alt text](./Images/select_target.PNG/?raw=true "Select Target")
-5. Select the desired capabilities.
+
+5. Select the desired capabilities and click Save.
 ![Alt text](./Images/enable_capabilities.PNG/?raw=true "Enable Capabilities")
 
-## 9. Start the Pipeline
+### Create new experiment
+
+1. Search for Chaos Experiments in the search bar.
+2. Click "Create" 
+3. Select the subscription and resource group
+4. In the "Experiment designer" click "Add action"
+5. Chose the experiment type
+
+Reference:
+https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal
+https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-fault-library#aks-chaos-mesh-network-faults
+
+## 10. Start the Pipeline
 
 If you have followed all the previous steps you can now start the pipeline, which will create the environment in your Azure resource group.
 
@@ -126,12 +144,12 @@ If you have followed all the previous steps you can now start the pipeline, whic
  
 - When you have entered all the inputs, click the green button "Run workflow"
 
-## 10. Retrieve IP for testing
+## 11. Retrieve IP for testing
 
 When the pipeline has completed status, you need to retrieve the ip address to test it.
 If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
 
-## 11. Test the Service
+## 12. Test the Service
 
 Now that you have retrieved the IP address, you will see your image at the same address and if you add */grafana* you can see the dashboard part. 
 
