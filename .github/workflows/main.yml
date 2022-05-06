@@ -93,7 +93,7 @@ jobs:
         shell: pwsh
         run: |
           $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          echo "JSONACTIONEXPERIMENT=$PsJson" >> $GITHUB_ENV
+          echo "JSONACTIONEXPERIMENT=${{ $PsJson }}" >> $GITHUB_ENV
           echo "::set-output name=json::$PsJson"
 
       # Print Json
