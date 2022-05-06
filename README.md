@@ -115,7 +115,7 @@ For other experiments you will need to enable the capabilities:
 4. In the "Experiment designer" click "Add action"
 5. Chose the experiment type
 
-Reference:
+Reference: <br />
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-fault-library#aks-chaos-mesh-network-faults
 
