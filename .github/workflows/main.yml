@@ -245,8 +245,8 @@ jobs:
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy and Run Choas Mesh Experiment
         run: |
-          cd src/chaos-studio/chaos-mesh
-          helm upgrade experiment --install .\chaos-mesh-chart\
+          cd src/chaos-studio/chaos-mesh/chaos-mesh-chart
+          helm upgrade experiment . --install
 
       # https://github.com/Azure/load-testing
       - name: 'Create Azure Load Test'
