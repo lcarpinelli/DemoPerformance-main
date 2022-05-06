@@ -41,8 +41,8 @@ kubectl get services --namespace default nginx-ingress-nginx-controller --output
 ## 2. Go to AKS resource
 
 ## 3. In the left pane, click to 'Services and ingress'
-![Alt text](./Images/services_and_ingresses.png/?raw=true "Select Services and Ingress tab")
+![services_and_ingresses](https://user-images.githubusercontent.com/33416347/167161720-96936faf-00cf-49aa-8de7-4995c8890aba.png)
 
 ## 4. Serch the service named 'nginx-ingress-nginx-controller'
 Copy or click to External IP
-![Alt text](./Images/get_external_ip.png?raw=true "Serch the service named 'nginx-ingress-nginx-controller'")
+![get_external_ip](https://user-images.githubusercontent.com/33416347/167161746-049fbacd-bf04-4f8e-9348-1142a2468d88.png)

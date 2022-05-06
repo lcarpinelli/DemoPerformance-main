@@ -102,10 +102,9 @@ For other experiments you will need to enable the capabilities:
 2. Search for Chaos Studio in the search bar.
 3. Click on Targets and navigate to your AKS cluster.
 4. Click on Manage Actions.
-![Alt text](./Images/select_target.PNG/?raw=true "Select Target")
-
+![select_target](https://user-images.githubusercontent.com/33416347/167161518-a147d25d-331e-4bd0-b6fe-86f044ef3e64.PNG)
 5. Select the desired capabilities and click Save.
-![Alt text](./Images/enable_capabilities.PNG/?raw=true "Enable Capabilities")
+![enable_capabilities](https://user-images.githubusercontent.com/33416347/167161436-8ade4f7a-1ea6-4196-a3ec-41e5cb2b4491.PNG)
 
 ### Create new experiment
 
