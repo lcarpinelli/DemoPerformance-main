@@ -14,7 +14,8 @@ env:
   KUBERNETESSERVICENAME:          "demo-performance-aks"
   AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
   AZURELOADTESTINGNAME:           "demo-performance-alt"
-  CLUSTERIP:                      ""       
+  CLUSTERIP:                      ""
+  JSONACTIONEXPERIMENT:           ""    
 
 # # Controls when the workflow will run
 # on:
@@ -65,26 +66,6 @@ jobs:
       - name: Checkout last version code from Main branch
         uses: actions/checkout@main
 
-      # Install PowerShell Module
-      - name: Install PowerShell Module
-        shell: pwsh
-        run: Install-Module powershell-yaml -Force
-
-      # Convrt Yaml to Json      
-      - name: Convrt Yaml to Json      
-        id: converter
-        shell: pwsh
-        run: |
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          echo "::set-output name=json::$PsJson"
-
-      # Print Json
-      - name: Print Json
-        shell: pwsh
-        run: |
-          $JsonToPrint = '${{ steps.converter.outputs.json }}'
-          echo $JsonToPrint
-
       # Log into Azure
       - name: Log into Azure
         uses: azure/login@v1
@@ -101,6 +82,27 @@ jobs:
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
 
+      # Install PowerShell Module
+      - name: Install PowerShell Module
+        shell: pwsh
+        run: Install-Module powershell-yaml -Force
+
+      # Convrt Yaml to Json      
+      - name: Convrt Yaml to Json      
+        id: converter
+        shell: pwsh
+        run: |
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+          echo "JSONACTIONEXPERIMENT=$PsJson" >> $GITHUB_ENV
+          echo "::set-output name=json::$PsJson"
+
+      # Print Json
+      - name: Print Json
+        shell: pwsh
+        run: |
+          $JsonToPrint = '${{ env.JSONACTIONEXPERIMENT }}'
+          echo $JsonToPrint
+      
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
         id: Kubernetes
@@ -109,7 +111,7 @@ jobs:
           subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
           resourceGroupName: 'rg-poc-demo-performance'
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: actionValue='${{ steps.converter.outputs.json }}'
+          parameters: actionValue='${{ env.JSONACTIONEXPERIMENT }}'
           failOnStdErr: false
 
       # # Deploy Bicep file Kubernetes service
