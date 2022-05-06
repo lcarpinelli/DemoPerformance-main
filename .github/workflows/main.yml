@@ -95,12 +95,6 @@ jobs:
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
-
-      # Assign role to Kubernetes service user to access Container Registry image
-      - name: Assign role to Kubernetes service user to access Container Registry image 
-        run: |
-          sleep 15
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
       
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
@@ -110,6 +104,12 @@ jobs:
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
 
+      # Assign role to Kubernetes service user to access Container Registry image
+      - name: Assign role to Kubernetes service user to access Container Registry image 
+        run: |
+          sleep 15
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+      
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
         run: |
