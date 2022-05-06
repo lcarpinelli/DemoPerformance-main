@@ -3,7 +3,8 @@ param location string = resourceGroup().location
 param experimentName string = 'TestFromBicepWithParamas'
 param aksName string = 'demo-performance-aks'
 
-param actionValue string
+param experimentConfiguration object
+
 param actionName string = 'podChaos' //'urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1'
 
 var targetId = '/subscriptions/${ subscription().subscriptionId }/resourceGroups/${ resourceGroup().name }/providers/Microsoft.ContainerService/managedClusters/${ aksName }/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh'
@@ -41,7 +42,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
                 parameters: [
                   {
                     key: 'jsonSpec'
-                    value: actionValue //'{"action":"pod-failure","mode":"all","duration":"600s","selector":{"namespaces":["demo-performance"]}}'
+                    value: '{"action":${experimentConfiguration.action},"mode":${experimentConfiguration.mode},"duration":${experimentConfiguration.duration},"selector":{"namespaces":[${experimentConfiguration.namespace}]}}'
                   }
                 ]
                 name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:${actionName}/2.1'

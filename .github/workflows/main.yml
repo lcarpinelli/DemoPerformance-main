@@ -81,40 +81,16 @@ jobs:
       #     echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
       #     echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
 
-      # - id: set_var
-      #   run: |
-      #     JSON=$(cat ./Bicep/ACS/config/podFailure.json)
-      #     echo "::set-output name=matrix::${JSON//'%'/'%25'}"
-      # - run: |
-      #     echo "${{fromJson(steps.set_var.outputs.matrix)}}"
-
-      # Deploy Chaos Experiment      
-      - name: Deploy Chaos Experiment      
-        id: converter
-        shell: pwsh
-        run: |
-          Install-Module powershell-yaml -Force
-          $RESOURCE_GROUP = ${{ secrets.AZURE_RG }}
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          az deployment group create --resource-group $RESOURCE_GROUP --template-file Bicep/ACS/mainACS.bicep --p actionValue=$PsJson
-
-      # # Print Json
-      # - name: Print Json
-      #   shell: pwsh
-      #   run: |
-      #     $JsonToPrint = '${{ env.JSONACTIONEXPERIMENT }}'
-      #     echo $JsonToPrint
-      
-      # # Deploy Bicep file Kubernetes service
-      # - name: Deploy Bicep file Kubernetes service
-      #   id: Kubernetes
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
-      #     resourceGroupName: 'rg-poc-demo-performance'
-      #     template: ./Bicep/ACS/mainACS.bicep
-      #     parameters: actionValue='${{ env.JSONACTIONEXPERIMENT }}'
-      #     failOnStdErr: false
+      # Deploy Chaos Experiment
+      - name: Deploy Chaos Experiment
+        id: Kubernetes
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
+          resourceGroupName: 'rg-poc-demo-performance'
+          template: ./Bicep/ACS/mainACS.bicep
+          parameters: ./Bicep/ACS/parameters.json
+          failOnStdErr: false
 
       # # Deploy Bicep file Kubernetes service
       # - name: Deploy Bicep file Kubernetes service
