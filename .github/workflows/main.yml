@@ -96,7 +96,7 @@ jobs:
           Install-Module powershell-yaml -Force
           $RESOURCE_GROUP = ${{ secrets.AZURE_RG }}
           $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          az deployment group create --resource-group $RESOURCE_GROUP --template-file Bicep/ACS/mainACS.bicep
+          az deployment group create --resource-group $RESOURCE_GROUP --template-file Bicep/ACS/mainACS.bicep --p actionValue=$PsJson
 
       # # Print Json
       # - name: Print Json
