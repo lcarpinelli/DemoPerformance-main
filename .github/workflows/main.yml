@@ -14,8 +14,7 @@ env:
   KUBERNETESSERVICENAME:          "demo-performance-aks"
   AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
   AZURELOADTESTINGNAME:           "demo-performance-alt"
-  CLUSTERIP:                      ""
-  JSONACTIONEXPERIMENT:           ""    
+  CLUSTERIP:                      "" 
 
 # # Controls when the workflow will run
 on:
@@ -85,7 +84,7 @@ jobs:
       - id: set_var
         run: |
           JSON=$(cat ./Bicep/ACS/config/podFailure.json)
-          echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+          echo "::set-output name=matrix::${{JSON//'%'/'%25'}}"
       - run: |
           echo "${{fromJson(steps.set_var.outputs.matrix)}}"
       # # Install PowerShell Module
