@@ -4,8 +4,6 @@
     "parameters": {
         "experimentConfiguration": {
             "value": {
-                "action": "pod-failure",
-                "mode": "all",
                 "duration": "300s",
                 "namespace": "demo-performance"
             }

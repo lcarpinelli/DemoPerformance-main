@@ -86,7 +86,20 @@ Upload the files needed to create the tests before starting the pipeline
 
 ## 8. Chaos Experiment configuration
 
-TODO
+The experiment used as an example disables the application pods for a specified time.
+
+Before running the pipeline, configure the json file located in "./Bicep/ACS/parameters.json".
+The configurable value is:
+  - duration = Duration in seconds of the experiment
+
+For other experiments you will need to enable the capabilities:
+1. Open the Azure portal.
+2. Search for Chaos Studio in the search bar.
+3. Click on Targets and navigate to your AKS cluster.
+4. Click on Manage Actions.
+![Alt text](./Images/select_target.PNG/?raw=true "Select Target")
+5. Select the desired capabilities.
+![Alt text](./Images/enable_capabilities.PNG/?raw=true "Enable Capabilities")
 
 ## 9. Start the Pipeline
 

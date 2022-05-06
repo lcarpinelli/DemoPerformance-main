@@ -1,6 +1,0 @@
-action: pod-failure
-mode: all
-duration: '600s'
-selector:
-  namespaces:
-    - 'demo-performance'
