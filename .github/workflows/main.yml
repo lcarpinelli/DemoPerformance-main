@@ -65,6 +65,26 @@ jobs:
       - name: Checkout last version code from Main branch
         uses: actions/checkout@main
 
+      # Install PowerShell Module
+      - name: Install PowerShell Module
+        shell: pwsh
+        run: Install-Module powershell-yaml -Force
+
+      # Convrt Yaml to Json      
+      - name: Convrt Yaml to Json      
+        id: converter
+        shell: pwsh
+        run: |
+          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
+          echo "::set-output name=json::$PsJson"
+
+      # Print Json
+      - name: Print Json
+        shell: pwsh
+        run: |
+          $JsonToPrint = '${{ steps.converter.outputs.json }}'
+          echo $JsonToPrint
+
       # Log into Azure
       - name: Log into Azure
         uses: azure/login@v1
@@ -80,25 +100,6 @@ jobs:
           echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
-
-      
-      - name: Install PowerShell Module
-        shell: pwsh
-        run: Install-Module powershell-yaml -Force
-
-      - name: Convrt Yaml to Json
-        
-        id: converter
-        shell: pwsh
-        run: |
-          $PsJson = @(ConvertFrom-Yaml -Yaml (Get-Content -Raw "Bicep/ACS/config/podFailure.yaml") | ConvertTo-Json -Compress)
-          echo "::set-output name=json::$PsJson"
-
-      - name: Print Json
-        shell: pwsh
-        run: |
-          $JsonToPrint = '${{ steps.converter.outputs.json }}'
-          echo $JsonToPrint
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
